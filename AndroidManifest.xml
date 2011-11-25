@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="info.staticfree.android.twentyfourhour"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.0.1" >
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk
+        android:minSdkVersion="4"
+        android:targetSdkVersion="10" />
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity android:name="WidgetDemo">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.MAIN"/>
+        <activity android:name="WidgetDemo" >
+            <intent-filter >
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <receiver android:name="TwentyFourHourClockWidget" android:label="@string/widget_name">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+
+        <receiver
+            android:label="@string/widget_name"
+            android:name="TwentyFourHourClockWidget" >
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:resource="@xml/widget" android:name="android.appwidget.provider"/>
-            <intent-filter>
-                <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+
+            <intent-filter >
+                <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
     </application>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
 
 </manifest>

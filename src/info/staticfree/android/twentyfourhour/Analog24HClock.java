@@ -53,7 +53,7 @@ public class Analog24HClock extends View {
 	}
 
 	private void init() {
-		mFace = getResources().getDrawable(R.drawable.clock_face);
+		mFace = getResources().getDrawable(R.drawable.clock_face_fixed_sunlight);
 		mHour = getResources().getDrawable(R.drawable.hour_hand);
 		mMinute = getResources().getDrawable(R.drawable.minute_hand);
 

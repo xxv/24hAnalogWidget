@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <info.staticfree.android.twentyfourhour.Analog24HClock
+        android:id="@+id/clock"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/intro_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip" />
+
+    <TextView
+        android:id="@+id/intro_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:paddingBottom="20sp"
+        android:paddingTop="5sp"
+        android:text="@string/intro_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

@@ -1,9 +1,27 @@
 package info.staticfree.android.twentyfourhour;
 
+/*
+ * Some portions Copyright (C) 2006 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -31,10 +49,18 @@ public class Analog24HClock extends View {
 	private Drawable mHour;
 	private Drawable mMinute;
 
+	private int mDialWidth;
+	private int mDialHeight;
+
 	private float mHourRot;
 	private float mMinRot;
 
 	private boolean mKeepon = false;
+	private int mBottom;
+	private int mTop;
+	private int mLeft;
+	private int mRight;
+	private boolean mSizeChanged;
 
 	public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -53,11 +79,15 @@ public class Analog24HClock extends View {
 	}
 
 	private void init() {
-		mFace = getResources().getDrawable(R.drawable.clock_face_fixed_sunlight);
-		mHour = getResources().getDrawable(R.drawable.hour_hand);
-		mMinute = getResources().getDrawable(R.drawable.minute_hand);
+		final Resources r = getResources();
+		mFace = r.getDrawable(R.drawable.clock_face_fixed_sunlight);
+		mHour = r.getDrawable(R.drawable.hour_hand);
+		mMinute = r.getDrawable(R.drawable.minute_hand);
 
 		c = Calendar.getInstance();
+
+		mDialHeight = mFace.getIntrinsicHeight();
+		mDialWidth = mFace.getIntrinsicWidth();
 	}
 
 	/**
@@ -117,8 +147,19 @@ public class Analog24HClock extends View {
 	}
 
 	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		mSizeChanged = true;
+	}
+
+	// some parts from AnalogClock.java
+	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+
+		final boolean sizeChanged = mSizeChanged;
+		mSizeChanged = false;
+
 		if (mShowNow) {
 			mTime = System.currentTimeMillis();
 			updateHands();
@@ -128,29 +169,108 @@ public class Analog24HClock extends View {
 			}
 		}
 
-		final int w = getWidth();
-		final int h = getHeight();
+		final int availW = mRight - mLeft;
+		final int availH = mBottom - mTop;
 
-		final int s = Math.min(w, h);
-		final int l = (w - s) / 2;
-		final int t = (h - s) / 2;
-		final int r = s + l;
-		final int b = s + t;
-		mFace.setBounds(l, t, r, b);
+		final int cX = availW / 2;
+		final int cY = availH / 2;
+
+		int w = mDialWidth;
+		int h = mDialHeight;
+
+		boolean scaled = false;
+
+		if (availW < w || availH < h) {
+			scaled = true;
+			final float scale = Math.min((float) availW / (float) w,
+					(float) availH / (float) h);
+			canvas.save();
+			canvas.scale(scale, scale, cX, cY);
+		}
+
+		if (sizeChanged) {
+			mFace.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY
+					+ (h / 2));
+		}
 
 		mFace.draw(canvas);
 
 		canvas.save();
-		canvas.rotate(mHourRot, w / 2, h / 2);
-		mHour.setBounds(l, t, r, b);
+		canvas.rotate(mHourRot, cX, cY);
+
+		if (sizeChanged) {
+			w = mHour.getIntrinsicWidth();
+			h = mHour.getIntrinsicHeight();
+			mHour.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY
+					+ (h / 2));
+		}
 		mHour.draw(canvas);
 		canvas.restore();
 
 		canvas.save();
-		canvas.rotate(mMinRot, w / 2, h / 2);
-		mMinute.setBounds(l, t, r, b);
+		canvas.rotate(mMinRot, cX, cY);
+
+		if (sizeChanged) {
+			w = mMinute.getIntrinsicWidth();
+			h = mMinute.getIntrinsicHeight();
+			mMinute.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY
+					+ (h / 2));
+		}
 		mMinute.draw(canvas);
 		canvas.restore();
+
+		if (scaled) {
+			canvas.restore();
+		}
+	}
+
+	// from AnalogClock.java
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+		final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+		final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+		final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+		final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+		float hScale = 1.0f;
+		float vScale = 1.0f;
+
+		if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < mDialWidth) {
+			hScale = (float) widthSize / (float) mDialWidth;
+		}
+
+		if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < mDialHeight) {
+			vScale = (float) heightSize / (float) mDialHeight;
+		}
+
+		final float scale = Math.min(hScale, vScale);
+
+		setMeasuredDimension(
+				getDefaultSize((int) (mDialWidth * scale), widthMeasureSpec),
+				getDefaultSize((int) (mDialHeight * scale), heightMeasureSpec));
+	}
+
+	@Override
+	protected int getSuggestedMinimumHeight() {
+		return mDialHeight;
+	}
+
+	@Override
+	protected int getSuggestedMinimumWidth() {
+		return mDialWidth;
+	}
+
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+
+		// because we don't have access to the actual protected fields
+		mRight = right;
+		mLeft = left;
+		mTop = top;
+		mBottom = bottom;
 	}
 
 	private void updateHands() {

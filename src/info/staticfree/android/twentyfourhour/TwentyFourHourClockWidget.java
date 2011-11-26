@@ -10,6 +10,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.widget.RemoteViews;
 
 public class TwentyFourHourClockWidget extends AppWidgetProvider {
@@ -61,16 +63,18 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 		final Analog24HClock clock = new Analog24HClock(context);
 		clock.setShowSeconds(false);
 
-		// TODO this is not the most precise or efficient way. How can one get the
-		// correct size of the widget?
-		clock.measure(144*2, 144*2);
-		clock.layout(0, 0, 144*2, 144*2);
-		clock.setDrawingCacheEnabled(true);
-		final Bitmap bitmap = clock.getDrawingCache();
-		//final Bitmap bmp = Bitmap.createBitmap(150, 150, Config.ARGB_8888);
-		//final Canvas c = new Canvas(bmp);
-		//clock.draw(c);
-		rv.setImageViewBitmap(R.id.clock, bitmap);
+		final int s = clock.getSuggestedMinimumHeight();
+		clock.measure(s, s);
+		clock.layout(0, 0, s, s);
+
+		final Bitmap bmp = Bitmap.createBitmap(s, s, Config.ARGB_8888);
+		final Canvas c = new Canvas(bmp);
+		clock.draw(c);
+
+		final Bitmap immutable = Bitmap.createBitmap(bmp);
+		bmp.recycle();
+
+		rv.setImageViewBitmap(R.id.clock, immutable);
 
 		final PendingIntent intent = ClockUtil.getClockIntent(context);
 		if (intent != null){

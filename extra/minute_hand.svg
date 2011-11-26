@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="minute_hand.svg"
-   inkscape:export-filename="/home/steve/work/android_workspace/24hAnalogWidget/res/drawable-hdpi/minute_hand.png"
-   inkscape:export-xdpi="48.209999"
-   inkscape:export-ydpi="48.209999">
+   inkscape:export-filename="/home/steve/work/android_workspace/24hAnalogWidget/res/drawable-mdpi/minute_hand.png"
+   inkscape:export-xdpi="15.75"
+   inkscape:export-ydpi="15.75">
   <defs
      id="defs6543" />
   <sodipodi:namedview
@@ -28,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="-220.09979"
-     inkscape:cy="525.61653"
+     inkscape:cx="560.74813"
+     inkscape:cy="490.3555"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"

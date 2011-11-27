@@ -63,6 +63,8 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 		final Analog24HClock clock = new Analog24HClock(context);
 		clock.setShowSeconds(false);
 
+		clock.addDialOverlay(new SunPositionOverlay(context));
+
 		final int s = clock.getSuggestedMinimumHeight();
 		clock.measure(s, s);
 		clock.layout(0, 0, s, s);

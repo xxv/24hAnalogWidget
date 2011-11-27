@@ -17,6 +17,7 @@ package info.staticfree.android.twentyfourhour;
  */
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -38,13 +39,12 @@ import android.view.View;
  */
 public class Analog24HClock extends View {
 
-	private long mTime;
 	private boolean mShowNow = true;
 	private boolean mShowSeconds = true;
 
 	private static final int UPDATE_INTERVAL = 1000 * 15;
 
-	private Calendar c;
+	private Calendar mCalendar;
 	private Drawable mFace;
 	private Drawable mHour;
 	private Drawable mMinute;
@@ -61,6 +61,8 @@ public class Analog24HClock extends View {
 	private int mLeft;
 	private int mRight;
 	private boolean mSizeChanged;
+
+	private final ArrayList<DialOverlay> mDialOverlay = new ArrayList<DialOverlay>();
 
 	public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -80,11 +82,11 @@ public class Analog24HClock extends View {
 
 	private void init() {
 		final Resources r = getResources();
-		mFace = r.getDrawable(R.drawable.clock_face_fixed_sunlight);
+		mFace = r.getDrawable(R.drawable.clock_face);
 		mHour = r.getDrawable(R.drawable.hour_hand);
 		mMinute = r.getDrawable(R.drawable.minute_hand);
 
-		c = Calendar.getInstance();
+		mCalendar = Calendar.getInstance();
 
 		mDialHeight = mFace.getIntrinsicHeight();
 		mDialWidth = mFace.getIntrinsicWidth();
@@ -99,8 +101,8 @@ public class Analog24HClock extends View {
 	 */
 	public void setTime(long time) {
 		mShowNow = false;
+		mCalendar.setTimeInMillis(time);
 
-		mTime = time;
 		updateHands();
 		invalidate();
 	}
@@ -131,7 +133,7 @@ public class Analog24HClock extends View {
 	 * @param timezone
 	 */
 	public void setTimezone(TimeZone timezone) {
-		c = Calendar.getInstance(timezone);
+		mCalendar = Calendar.getInstance(timezone);
 	}
 
 	@Override
@@ -161,7 +163,8 @@ public class Analog24HClock extends View {
 		mSizeChanged = false;
 
 		if (mShowNow) {
-			mTime = System.currentTimeMillis();
+			mCalendar.setTimeInMillis(System.currentTimeMillis());
+
 			updateHands();
 
 			if (mKeepon) {
@@ -194,6 +197,10 @@ public class Analog24HClock extends View {
 		}
 
 		mFace.draw(canvas);
+
+		for (final DialOverlay overlay : mDialOverlay){
+			overlay.onDraw(canvas, cX, cY, w, h, mCalendar);
+		}
 
 		canvas.save();
 		canvas.rotate(mHourRot, cX, cY);
@@ -274,14 +281,32 @@ public class Analog24HClock extends View {
 	}
 
 	private void updateHands() {
-		c.setTimeInMillis(mTime);
 
-		final int h = c.get(Calendar.HOUR_OF_DAY);
-		final int m = c.get(Calendar.MINUTE);
-		final int s = c.get(Calendar.SECOND);
 
-		mHourRot = ((12 + h) / 24.0f * 360) % 360 + (m / 60.0f) * 360 / 24.0f;
+		final int h = mCalendar.get(Calendar.HOUR_OF_DAY);
+		final int m = mCalendar.get(Calendar.MINUTE);
+		final int s = mCalendar.get(Calendar.SECOND);
+
+		mHourRot = getHourHandAngle(h, m);
 		mMinRot = (m / 60.0f) * 360
 				+ (mShowSeconds ? ((s / 60.0f) * 360 / 60.0f) : 0);
+	}
+
+	public static float getHourHandAngle(int h, int m){
+		return ((12 + h) / 24.0f * 360) % 360 + (m / 60.0f) * 360 / 24.0f;
+	}
+
+	public void addDialOverlay (DialOverlay dialOverlay){
+		mDialOverlay.add(dialOverlay);
+	}
+
+	public void removeDialOverlay (DialOverlay dialOverlay){
+		mDialOverlay.remove(dialOverlay);
+	}
+
+	public interface DialOverlay {
+
+		public abstract void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar);
+
 	}
 }

@@ -79,8 +79,9 @@ public class SunPositionOverlay implements DialOverlay {
 		ll.setLatitude(loc.getLatitude());
 		ll.setLongitude(loc.getLongitude());
 
-		final boolean dst = false; // TODO where can one get this info?
 		final TimeZone tz = calendar.getTimeZone();
+
+		final boolean dst = calendar.get(Calendar.DST_OFFSET) != 0;
 
 		final Time sunrise = Sun.sunriseTime(calendar, ll, tz, dst);
 		final float sunriseAngle = getHourArcAngle(sunrise.getHours(), sunrise.getMinutes());

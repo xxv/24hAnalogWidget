@@ -17,9 +17,9 @@
    inkscape:version="0.48.1 r9760"
    version="1.0"
    sodipodi:docname="app_icon.svg"
-   inkscape:export-filename="/home/steve/android/workspace/24hAnalogWidget/res/drawable-ldpi/ic_launcher.png"
-   inkscape:export-xdpi="2.95"
-   inkscape:export-ydpi="2.95"
+   inkscape:export-filename="/home/steve/android/workspace/24hAnalogWidget/extra/ic_launcher_512.png"
+   inkscape:export-xdpi="41.889999"
+   inkscape:export-ydpi="41.889999"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <script
      type="text/ecmascript"
@@ -375,9 +375,9 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35819893"
-     inkscape:cx="281.89766"
-     inkscape:cy="537.30305"
+     inkscape:zoom="0.25328489"
+     inkscape:cx="527.10954"
+     inkscape:cy="539.61619"
      inkscape:document-units="cm"
      inkscape:current-layer="layer4"
      width="30cm"
@@ -398,56 +398,12 @@
      units="px">
     <sodipodi:guide
        orientation="vertical"
-       position="531.50112"
+       position="542.29643,839.26828"
        id="guide15562" />
     <sodipodi:guide
        orientation="horizontal"
-       position="531.48996"
+       position="160.17636,551.71857"
        id="guide15564" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="838.62864"
-       id="guide3041" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="807.51594"
-       id="guide3043" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="753.77583"
-       id="guide3045" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="684.47936"
-       id="guide3047" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="599.62655"
-       id="guide3049" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="429.92092"
-       id="guide3051" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="345.06811"
-       id="guide3053" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="275.77164"
-       id="guide3055" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="222.03153"
-       id="guide3057" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="188.0904"
-       id="guide3059" />
-    <sodipodi:guide
-       orientation="horizontal"
-       position="511.94531"
-       id="guide3061" />
     <inkscape:grid
        id="GridFromPre046Settings"
        type="xygrid"
@@ -523,7 +479,8 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
      inkscape:groupmode="layer"
      id="layer1"
      style="display:inline"
-     transform="translate(11.163452,17.007956)">
+     transform="translate(11.163452,17.007956)"
+     sodipodi:insensitive="true">
     <path
        sodipodi:type="arc"
        style="fill:url(#radialGradient4169);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.75;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -532,10 +489,10 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        sodipodi:cy="526.0473"
        sodipodi:rx="542.65948"
        sodipodi:ry="531.49603"
-       d="m 1075.6561,526.0473 c 0,293.53716 -242.9569,531.496 -542.65946,531.496 -299.70255,0 -542.6594818,-237.95884 -542.6594818,-531.496 0,-293.53715 242.9569318,-531.4960305 542.6594818,-531.4960305 299.70256,0 542.65946,237.9588805 542.65946,531.4960305 z"
+       d="m 1075.6561,526.0473 a 542.65948,531.49603 0 1 1 -1085.3189418,0 542.65948,531.49603 0 1 1 1085.3189418,0 z"
        transform="translate(-1.5006104,25.448731)" />
     <path
-       d="m 994.57147,531.56348 c 0,255.78675 -207.35613,463.14288 -463.14288,463.14288 -255.78675,0 -463.142884,-207.35613 -463.142884,-463.14288 0,-255.78675 207.356134,-463.142887 463.142884,-463.142887 255.78675,0 463.14288,207.356137 463.14288,463.142887 z"
+       d="m 994.57147,531.56348 a 463.14288,463.14288 0 1 1 -926.285764,0 463.14288,463.14288 0 1 1 926.285764,0 z"
        sodipodi:ry="463.14288"
        sodipodi:rx="463.14288"
        sodipodi:cy="531.56348"
@@ -555,7 +512,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
          x="519"
          y="110.99206" /></text>
     <path
-       d="m 994.57147,531.56348 c 0,255.78675 -207.35613,463.14288 -463.14288,463.14288 -255.78675,0 -463.142884,-207.35613 -463.142884,-463.14288 0,-255.78675 207.356134,-463.142887 463.142884,-463.142887 255.78675,0 463.14288,207.356137 463.14288,463.142887 z"
+       d="m 994.57147,531.56348 a 463.14288,463.14288 0 1 1 -926.285764,0 463.14288,463.14288 0 1 1 926.285764,0 z"
        sodipodi:ry="463.14288"
        sodipodi:rx="463.14288"
        sodipodi:cy="531.56348"
@@ -573,7 +530,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        sodipodi:cy="531.56348"
        sodipodi:rx="463.14288"
        sodipodi:ry="463.14288"
-       d="m 994.57147,531.56348 c 0,255.78675 -207.35613,463.14288 -463.14288,463.14288 -255.78675,0 -463.142884,-207.35613 -463.142884,-463.14288 0,-255.78675 207.356134,-463.142887 463.142884,-463.142887 255.78675,0 463.14288,207.356137 463.14288,463.142887 z" />
+       d="m 994.57147,531.56348 a 463.14288,463.14288 0 1 1 -926.285764,0 463.14288,463.14288 0 1 1 926.285764,0 z" />
     <path
        style="fill:url(#radialGradient3548);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.57874012;marker:none;visibility:visible;display:inline;overflow:visible"
        d="m 534.39147,66.4375 c 107.90714,0.221342 215.06659,39.95849 297.0625,109.8125 87.57687,73.53682 146.6155,180.54516 161.06684,294.21035 14.63039,108.72937 -10.6611,222.25155 -70.81684,314.0709 -65.69321,101.78977 -172.25491,176.11988 -290.96875,201.5 -114.28798,25.26595 -237.94541,5.39467 -338.09375,-55.25 C 190.89295,870.20899 113.96625,769.56494 82.836936,655.13181 51.038016,540.66695 65.246006,414.05922 122.39147,309.90625 180.55072,202.08451 282.67664,119.21323 400.49701,85.120808 443.86397,72.389301 489.15867,66.114791 534.39147,66.4375 z"
@@ -595,7 +552,8 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
      id="layer5"
      inkscape:label="clock face"
      style="display:inline"
-     transform="translate(11.163452,17.007956)">
+     transform="translate(11.163452,17.007956)"
+     sodipodi:insensitive="true">
     <path
        style="fill:#000000;fill-opacity:0.33720931;fill-rule:evenodd;stroke:none;stroke-width:3.57874012;marker:none;visibility:visible;display:inline;overflow:visible"
        d="m 529.75,229.125 0,9.21875 c 0.58442,-0.003 1.16478,-0.0312 1.75,-0.0312 0.60612,0 1.20724,0.0276 1.8125,0.0312 l 0,-9.21875 -3.5625,0 z m -74.75,9.8125 -3.46875,0.9375 2.375,8.84375 c 1.15266,-0.31588 2.31048,-0.6354 3.46875,-0.9375 L 455,238.9375 z m 153.0625,0.0312 -2.375,8.8125 c 1.16567,0.30431 2.30877,0.65049 3.46875,0.96875 l 2.375,-8.875 -3.46875,-0.90625 z m -226.1875,29.75 -3.09375,1.78125 4.59375,7.96875 c 1.02529,-0.60183 2.06056,-1.19158 3.09375,-1.78125 L 381.875,268.7187 z m 299.28125,0.0312 -4.59375,7.9375 c 1.03761,0.59232 2.06411,1.20792 3.09375,1.8125 L 684.25,270.53125 681.15625,268.75 z m -362.1875,47.65625 -2.53125,2.5 6.5625,6.5625 c 0.83202,-0.8419 1.65792,-1.69942 2.5,-2.53125 l -6.53125,-6.53125 z m 425.09375,0.0312 -6.53125,6.53125 c 0.84328,0.83326 1.66682,1.68789 2.5,2.53125 l 6.5625,-6.53125 -2.53125,-2.53125 z m -473.53125,62.28125 -1.78125,3.09375 7.96875,4.59375 c 0.58987,-1.03297 1.17923,-2.06868 1.78125,-3.09375 l -7.96875,-4.59375 z m 521.96875,0.0625 -7.96875,4.59375 c 0.60183,1.02529 1.19158,2.06056 1.78125,3.09375 l 7.96875,-4.5936 -1.78125,-3.09375 z m -552.625,72.6875 -0.90625,3.46875 8.8125,2.375 c 0.30233,-1.15817 0.62139,-2.31619 0.9375,-3.46875 l -8.84375,-2.375 z m 583.25,0.0625 -8.84375,2.375 c 0.31323,1.14298 0.63782,2.289 0.9375,3.4375 L 824.03125,455 823.125,451.53125 z m -594,78.15625 0,3.5625 9.21875,0 c -0.003,-0.58442 -0.0312,-1.16478 -0.0312,-1.75 0,-0.60612 0.0276,-1.20724 0.0312,-1.8125 l -9.21875,0 z m 595.53125,0.0625 c 0.003,0.58442 0.0312,1.16478 0.0312,1.75 0,0.60612 -0.0276,1.20724 -0.0312,1.8125 l 9.21875,0 0,-3.5625 -9.21875,0 z m -576.875,75.875 -8.84375,2.375 0.9375,3.46875 8.84375,-2.375 c -0.31727,-1.15743 -0.63412,-2.30566 -0.9375,-3.46875 z m 567.4375,0.0625 c -0.30431,1.16567 -0.65049,2.30877 -0.96875,3.46875 l 8.84375,2.375 0.9375,-3.46875 -8.8125,-2.375 z m -538.5625,70.8125 -7.9375,4.59375 1.78125,3.125 7.96875,-4.59375 c -0.609,-1.03751 -1.21595,-2.0794 -1.8125,-3.125 z m 509.65625,0.0625 c -0.59232,1.03761 -1.20792,2.06411 -1.8125,3.09375 l 7.96875,4.59375 1.78125,-3.09375 -7.9375,-4.59375 z m -463.375,60.9375 -6.53125,6.53125 2.5,2.53125 6.5625,-6.5625 c -0.8432,-0.83328 -1.69815,-1.65663 -2.53125,-2.5 z m 417.09375,0 c -0.8397,0.84995 -1.6813,1.69155 -2.53125,2.53125 l 6.53125,6.5625 2.53125,-2.53125 -6.53125,-6.5625 z m -356.71875,47 -4.59375,7.96875 3.09375,1.78125 4.59375,-7.96875 c -1.03297,-0.58987 -2.06868,-1.17923 -3.09375,-1.78125 z m 296.3125,0.0312 c -1.03751,0.609 -2.0794,1.21595 -3.125,1.8125 l 4.59375,7.9375 3.125,-1.78125 -4.59375,-7.96875 z m -225.78125,29.75 -2.375,8.8125 3.46875,0.9375 2.375,-8.8125 c -1.15817,-0.30233 -2.31619,-0.62139 -3.46875,-0.9375 z m 155.25,0 c -1.14772,0.31461 -2.28421,0.63655 -3.4375,0.9375 l 2.34375,8.8125 3.46875,-0.90625 -2.375,-8.84375 z m -79.40625,10.375 0,9.21875 3.5625,0 0,-9.21875 c -0.58442,0.003 -1.16478,0.0312 -1.75,0.0312 -0.60612,0 -1.20724,-0.0276 -1.8125,-0.0312 z"
@@ -608,12 +566,11 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        id="path2915"
        sodipodi:cx="531.49603"
        sodipodi:cy="531.49603"
-       sodipodi:rx="293.19678"
-       sodipodi:ry="293.19678"
-       d="m 824.69281,531.49603 a 293.19678,293.19678 0 1 1 -586.39355,-10e-6"
-       sodipodi:start="0"
-       sodipodi:end="3.1415927"
-       sodipodi:open="true" />
+       sodipodi:rx="271.48209"
+       sodipodi:ry="271.48209"
+       d="m 800.35288,569.15925 a 271.48209,271.48209 0 0 1 -537.24795,3.18698 l 268.3911,-40.8502 z"
+       sodipodi:start="0.1391808"
+       sodipodi:end="2.9905479" />
     <g
        inkscape:groupmode="layer"
        id="layer3"

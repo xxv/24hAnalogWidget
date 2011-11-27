@@ -16,9 +16,9 @@
    id="svg15302"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="clock_face.svg"
-   inkscape:export-filename="/home/steve/android/workspace/24hAnalogWidget/res/drawable-hdpi/clock_face_fixed_sunlight.png"
-   inkscape:export-xdpi="48.209999"
-   inkscape:export-ydpi="48.209999">
+   inkscape:export-filename="/home/steve/android/workspace/24hAnalogWidget/res/drawable-ldpi/ic_launcher.png"
+   inkscape:export-xdpi="2.8900001"
+   inkscape:export-ydpi="2.8900001">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -37,9 +37,9 @@
      fit-margin-right="1"
      fit-margin-bottom="1"
      inkscape:zoom="0.49906716"
-     inkscape:cx="438.58816"
-     inkscape:cy="536.78254"
-     inkscape:current-layer="layer12" />
+     inkscape:cx="442.59564"
+     inkscape:cy="535.78067"
+     inkscape:current-layer="layer9" />
   <defs
      id="defs15304">
     <linearGradient
@@ -820,7 +820,8 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        inkscape:groupmode="layer"
        id="layer8"
        inkscape:label="orig numbering"
-       style="display:none">
+       style="display:inline"
+       sodipodi:insensitive="true">
       <g
          style="display:inline"
          id="g3966"
@@ -2475,7 +2476,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        inkscape:groupmode="layer"
        id="layer11"
        inkscape:label="simplified hours"
-       style="display:inline">
+       style="display:none">
       <path
          d="m 784.04928,325.2005 7.66602,0 0,-27.85645 -8.25196,1.85547 0,-4.49218 8.20313,-1.80665 4.93164,0 0,32.29981 7.56836,0 0,4.15039 -20.11719,0 0,-4.15039 m 28.54004,-32.29981 18.45703,0 0,4.1504 -13.96484,0 0,8.95996 c 0.69986,-0.2604 1.39973,-0.44757 2.09961,-0.56153 0.71613,-0.13018 1.43228,-0.19529 2.14843,-0.19531 3.77603,2e-5 6.77082,1.11493 8.98438,3.34473 2.21352,2.22983 3.32029,5.24904 3.32031,9.05761 -2e-5,3.84116 -1.16376,6.8685 -3.49121,9.08204 -2.31122,2.21354 -5.4769,3.32031 -9.49707,3.32031 -1.93686,0 -3.71095,-0.13021 -5.32227,-0.39063 -1.59505,-0.26041 -3.02734,-0.65104 -4.29687,-1.17187 l 0,-5.00489 c 1.49739,0.81381 3.00292,1.42416 4.5166,1.83106 1.51366,0.39063 3.05989,0.58594 4.63867,0.58594 2.71809,0 4.80956,-0.71614 6.27442,-2.14844 1.4811,-1.43229 2.22166,-3.46679 2.22168,-6.10352 -2e-5,-2.60415 -0.765,-4.63051 -2.29492,-6.0791 -1.51369,-1.44855 -3.62958,-2.17283 -6.34766,-2.17285 -1.31837,2e-5 -2.60418,0.15464 -3.85742,0.46387 -1.25327,0.29299 -2.44955,0.74058 -3.58887,1.34277 l 0,-18.31055"
          id="text2858-1"
@@ -2696,7 +2697,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
         <path
            d="m 574.01473,208.4037 a 14.07107,14.07107 0 0 1 -28.14214,0 14.07107,14.07107 0 1 1 28.14214,0 z"
            id="path2891-2"
-           style="fill:#f3f3f3;stroke:#000000;stroke-width:4.25196838000000010;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;fill-opacity:1"
+           style="fill:#f3f3f3;fill-opacity:1;stroke:#000000;stroke-width:4.25196838;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible"
            inkscape:connector-curvature="0" />
       </g>
     </g>
@@ -2704,7 +2705,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        inkscape:groupmode="layer"
        id="layer12"
        inkscape:label="minutes (lines)"
-       style="display:inline">
+       style="display:none">
       <use
          x="0"
          y="0"
@@ -3421,7 +3422,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        id="layer14"
        inkscape:label="hour ticks"
        sodipodi:insensitive="true"
-       style="display:none">
+       style="display:inline">
       <path
          inkscape:connector-curvature="0"
          style="fill:#000000;fill-opacity:0.33720931;fill-rule:evenodd;stroke:none;stroke-width:3.57874012;marker:none;visibility:visible;display:inline;overflow:visible"
@@ -3434,7 +3435,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
      id="layer13"
      inkscape:label="hands"
      sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:none">
     <g
        id="g7332"
        inkscape:transform-center-y="-61.177023"

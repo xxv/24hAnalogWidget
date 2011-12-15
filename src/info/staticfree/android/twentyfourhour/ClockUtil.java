@@ -36,6 +36,7 @@ public class ClockUtil {
 
 	    // Verify clock implementation
 	    final String clockImpls[][] = {
+                    {"Alarm Klock", "com.angrydoughnuts.android.alarmclock", "com.angrydoughnuts.android.alarmclock.ActivityAlarmClock" },
 	            {"HTC Alarm Clock", "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl" },
 	            {"Standar Alarm Clock", "com.android.deskclock", "com.android.deskclock.AlarmClock"},
 	            {"Froyo Nexus Alarm Clock", "com.google.android.deskclock", "com.android.deskclock.DeskClock"},

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">24h Analog Clock Widget</string>
-    <string name="widget_name">Analog clock, 24h Small</string>
+    <string name="widget_name">Analog clock, 24h</string>
+    <string name="widget_name_2x">Analog clock, 24h Small</string>
     <string name="widget_name_3x">Analog clock, 24h Medium</string>
     <string name="widget_name_4x">Analog clock, 24h Large</string>
     <string name="intro_text">This is a preview of the homescreen widget which displays a 12-at-the-top 24 hour analog clock. Noon is at the top so that the hour hand mimics the path of the sun.</string>

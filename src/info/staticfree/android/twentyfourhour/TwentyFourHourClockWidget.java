@@ -79,7 +79,7 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 	}
 
 	protected float getSize(Context context) {
-		return 196 * getDisplayDensity(context);
+		return 453f * getDisplayDensity(context);
 	}
 
 	@Override

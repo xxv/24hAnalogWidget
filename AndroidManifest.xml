@@ -30,12 +30,12 @@
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true" />
-    
+
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity android:name="WidgetDemo" >
-            <intent-filter >
+            <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +43,9 @@
         </activity>
 
         <receiver
-            android:label="@string/widget_name"
-            android:name="TwentyFourHourClockWidget" >
-            <intent-filter >
+            android:name="TwentyFourHourClockWidget"
+            android:label="@string/widget_name" >
+            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
@@ -53,16 +53,33 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget" />
 
-            <intent-filter >
+            <intent-filter>
                 <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:label="@string/widget_name_3x"
-            android:name="TwentyFourHourClockWidget3x" >
-            <intent-filter >
+            android:name="TwentyFourHourClockWidget2x"
+            android:label="@string/widget_name_2x" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_2x" />
+
+            <intent-filter>
+                <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="TwentyFourHourClockWidget3x"
+            android:label="@string/widget_name_3x" >
+            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
@@ -70,16 +87,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_3x" />
 
-            <intent-filter >
+            <intent-filter>
                 <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:label="@string/widget_name_4x"
-            android:name="TwentyFourHourClockWidget4x" >
-            <intent-filter >
+            android:name="TwentyFourHourClockWidget4x"
+            android:label="@string/widget_name_4x" >
+            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
@@ -87,11 +104,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_4x" />
 
-            <intent-filter >
+            <intent-filter>
                 <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

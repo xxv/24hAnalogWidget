@@ -1,17 +1,17 @@
 package info.staticfree.android.twentyfourhour;
 /*
  * Copyright (C) 2011 Steve Pomeroy <steve@staticfree.info>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -77,6 +77,7 @@ public class Analog24HClock extends View {
 	private int mLeft;
 	private int mRight;
 	private boolean mSizeChanged;
+	private boolean mUseLargeFace = false;
 
 	private final ArrayList<DialOverlay> mDialOverlay = new ArrayList<DialOverlay>();
 
@@ -98,9 +99,10 @@ public class Analog24HClock extends View {
 
 	private void init() {
 		final Resources r = getResources();
-		mFace = r.getDrawable(R.drawable.clock_face);
-		mHour = r.getDrawable(R.drawable.hour_hand);
-		mMinute = r.getDrawable(R.drawable.minute_hand);
+		mFace = r.getDrawable(mUseLargeFace ? R.drawable.clock_face_large : R.drawable.clock_face);
+		mHour = r.getDrawable(mUseLargeFace ? R.drawable.hour_hand_large : R.drawable.hour_hand);
+		mMinute = r.getDrawable(mUseLargeFace ? R.drawable.minute_hand_large
+				: R.drawable.minute_hand);
 
 		mCalendar = Calendar.getInstance();
 
@@ -167,6 +169,16 @@ public class Analog24HClock extends View {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
+
+		final boolean prevUseLargeFace = mUseLargeFace;
+
+		mUseLargeFace = w > mDialWidth || h > mDialHeight;
+
+		// reinitialize if we need to switch face images
+		if (prevUseLargeFace != mUseLargeFace) {
+			init();
+		}
+
 		mSizeChanged = true;
 	}
 

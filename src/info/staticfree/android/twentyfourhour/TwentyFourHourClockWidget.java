@@ -1,6 +1,7 @@
 package info.staticfree.android.twentyfourhour;
+
 /*
- * Copyright (C) 2011 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2012 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,12 +27,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
 import android.widget.RemoteViews;
 
 public class TwentyFourHourClockWidget extends AppWidgetProvider {
 
+	private static final String TAG = TwentyFourHourClockWidget.class.getSimpleName();
+
 	private Analog24HClock clock;
-	private int mWidgetSize;
 
 	/**
 	 * Sending this broadcast intent will cause the clock widgets to update.
@@ -73,6 +78,10 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 		}
 	}
 
+	protected float getSize(Context context) {
+		return 196 * getDisplayDensity(context);
+	}
+
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
@@ -83,11 +92,12 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 			clock.setShowSeconds(false);
 			clock.addDialOverlay(new SunPositionOverlay(context));
 
-			final int s = clock.getSuggestedMinimumHeight();
+			final int s = (int) getSize(context);
+			clock.onSizeChanged(s, s, 0, 0);
 			clock.measure(s, s);
 			clock.layout(0, 0, s, s);
+			Log.d(TAG, "size is " + s);
 			clock.setDrawingCacheEnabled(true);
-			mWidgetSize = s;
 
 			final PendingIntent intent = ClockUtil.getClockIntent(context);
 			if (intent != null){
@@ -101,6 +111,13 @@ public class TwentyFourHourClockWidget extends AppWidgetProvider {
 		}
 
 		appWidgetManager.updateAppWidget(appWidgetIds, rv);
+	}
+
+	protected float getDisplayDensity(Context context) {
+		final DisplayMetrics dm = new DisplayMetrics();
+		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+				.getMetrics(dm);
+		return dm.density;
 	}
 
 	/**

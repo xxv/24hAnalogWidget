@@ -126,6 +126,20 @@ public class Analog24HClock extends View {
 	}
 
 	/**
+	 * Sets the currently displayed time. This will clear {@link #setShowNow(boolean)}.
+	 *
+	 * @param calendar
+	 *            The time to display on the clock
+	 */
+	public void setTime(Calendar calendar) {
+		mShowNow = false;
+		mCalendar = calendar;
+
+		updateHands();
+		invalidate();
+	}
+
+	/**
 	 * When set, the current time in the current timezone will be displayed.
 	 *
 	 * @param showNow
@@ -259,7 +273,22 @@ public class Analog24HClock extends View {
 		}
 	}
 
-	// from AnalogClock.java
+	/*
+	 * The below method from AnalogClock.java
+	 *
+	 * Copyright (C) 2006 The Android Open Source Project
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+	 * except in compliance with the License. You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software distributed under the
+	 * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+	 * either express or implied. See the License for the specific language governing permissions
+	 * and limitations under the License.
+	 */
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 

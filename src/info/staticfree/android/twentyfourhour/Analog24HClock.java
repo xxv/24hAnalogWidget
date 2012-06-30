@@ -37,7 +37,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -80,6 +83,7 @@ public class Analog24HClock extends View {
 	private boolean mUseLargeFace = false;
 
 	private final ArrayList<DialOverlay> mDialOverlay = new ArrayList<DialOverlay>();
+	private boolean mAttached = false;
 
 	public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -118,7 +122,7 @@ public class Analog24HClock extends View {
 	 *            the time to display on the clock
 	 */
 	public void setTime(long time) {
-		mShowNow = false;
+		setShowNow(false);
 		mCalendar.setTimeInMillis(time);
 
 		updateHands();
@@ -132,7 +136,7 @@ public class Analog24HClock extends View {
 	 *            The time to display on the clock
 	 */
 	public void setTime(Calendar calendar) {
-		mShowNow = false;
+		setShowNow(false);
 		mCalendar = calendar;
 
 		updateHands();
@@ -146,6 +150,13 @@ public class Analog24HClock extends View {
 	 */
 	public void setShowNow(boolean showNow) {
 		mShowNow = showNow;
+		if (mAttached) {
+			if (mShowNow) {
+				registerReceivers();
+			} else {
+				unregisterReceivers();
+			}
+		}
 	}
 
 	/**
@@ -170,14 +181,39 @@ public class Analog24HClock extends View {
 
 	@Override
 	protected void onAttachedToWindow() {
-		mKeepon = true;
 		super.onAttachedToWindow();
+		mKeepon = true;
+
+		if (!mAttached) {
+			mAttached = true;
+			if (mShowNow) {
+				registerReceivers();
+			}
+		}
+	}
+
+	private void registerReceivers() {
+		final IntentFilter clockFilter = new IntentFilter();
+		clockFilter.addAction(Intent.ACTION_TIME_CHANGED);
+		clockFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+		getContext().registerReceiver(mClockChangeReceiver, clockFilter);
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
-		mKeepon = false;
 		super.onDetachedFromWindow();
+
+		mKeepon = false;
+		if (mAttached) {
+			if (mShowNow) {
+				unregisterReceivers();
+			}
+			mAttached = false;
+		}
+	}
+
+	private void unregisterReceivers() {
+		getContext().unregisterReceiver(mClockChangeReceiver);
 	}
 
 	@Override
@@ -366,4 +402,21 @@ public class Analog24HClock extends View {
 		public abstract void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar);
 
 	}
+
+	private final BroadcastReceiver mClockChangeReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			final String action = intent.getAction();
+			// borrowed from AnalogClock.java
+			if (Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
+				final String tz = intent.getStringExtra("time-zone");
+				mCalendar = Calendar.getInstance(TimeZone.getTimeZone(tz));
+			}
+
+			updateHands();
+			invalidate();
+		}
+
+	};
 }

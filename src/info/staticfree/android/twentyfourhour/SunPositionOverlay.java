@@ -45,6 +45,9 @@ public class SunPositionOverlay implements DialOverlay {
 
 	private final RectF inset = new RectF();
 	private final LatitudeLongitude ll = new LatitudeLongitude(0,0);
+
+	private Location mLocation;
+
 	private static Paint OVERLAY_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG) ;
 	private static Paint OVERLAY_NO_INFO_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -89,6 +92,14 @@ public class SunPositionOverlay implements DialOverlay {
 		}
 	}
 
+	public void setLocation(Location location) {
+		mLocation = location;
+	}
+
+	public void setUsePassiveLocation() {
+		mLocation = null;
+	}
+
 	private float getHourArcAngle(int h, int m){
 		return (Analog24HClock.getHourHandAngle(h, m) + 270) % 360.0f;
 	}
@@ -99,7 +110,7 @@ public class SunPositionOverlay implements DialOverlay {
 
 	@Override
 	public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar) {
-		final Location loc = getRecentLocation();
+		final Location loc = mLocation != null ? mLocation : getRecentLocation();
 		final int insetW = (int) (w / 2.0f / 2.0f);
 		final int insetH = (int) (h / 2.0f / 2.0f);
 		inset.set(cX - insetW, cY - insetH, cX + insetW, cY + insetH);

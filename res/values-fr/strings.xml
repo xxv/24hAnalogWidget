@@ -2,8 +2,7 @@
 <resources>
     <string name="app_name">Widget Horloge Analogique sur 24h</string>
     <string name="widget_name">Horloge Analogique, 24h</string>
-    <string name="widget_name_2x">Horloge Analogique sur 24h, petite taille</string>
-    <string name="widget_name_3x">Horloge Analogique sur 24h, taille moyenne</string>
-    <string name="widget_name_4x">Horloge Analogique sur 24h, grande taille</string>
+    <string name="widget_name_2x">Horloge Analogique sur 24h, 2x2</string>
+    <string name="widget_name_3x">Horloge Analogique sur 24h, 3x3</string>
     <string name="intro_text">Ceci est un apperçu de ce widget d\'écran d\'accueil qui montre une horloge analogique sur 24 heures. Midi est en haut, pour que l\'aiguille des heures suive la course du soleil.</string>
 </resources>

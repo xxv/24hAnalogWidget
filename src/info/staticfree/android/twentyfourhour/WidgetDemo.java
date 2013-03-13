@@ -78,12 +78,6 @@ public class WidgetDemo extends Activity {
 						: PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
 				PackageManager.DONT_KILL_APP);
 
-		pm.setComponentEnabledSetting(new ComponentName(this, TwentyFourHourClockWidget4x.class),
-				supportsResize ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-						: PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
-				PackageManager.DONT_KILL_APP);
-
-
 		prefs.edit().putBoolean(PREF_DISABLED_ALT_SIZES, true).commit();
 	}
 

@@ -93,23 +93,6 @@
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name="TwentyFourHourClockWidget4x"
-            android:label="@string/widget_name_4x" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_4x" />
-
-            <intent-filter>
-                <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
-                <action android:name="android.intent.action.TIME_CHANGED" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

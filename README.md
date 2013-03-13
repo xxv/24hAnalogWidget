@@ -7,7 +7,7 @@ Noon is at the top, so that the hour hand mimics the path of the sun.
 ![screenshot of widget](extra/sshot02.jpg)
 
 In addition to the time, it will display when the sun rises/sets for your
-current location on the dial. 
+current location on the dial.
 
 Permissions
 -----------
@@ -31,7 +31,7 @@ License
 -------
 
 24h Analog Clock Widget  
-Copyright (C) 2011 [Steve Pomeroy](mailto:steve@staticfree.info)
+Copyright (C) 2011-2013 [Steve Pomeroy](mailto:steve@staticfree.info)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

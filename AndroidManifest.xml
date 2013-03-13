@@ -34,6 +34,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:name="info.staticfree.android.twentyfourhour.AnalogClockApplication"
         android:label="@string/app_name" >
         <activity android:name="WidgetDemo" >
             <intent-filter>
@@ -44,7 +45,7 @@
         </activity>
 
         <receiver
-            android:name="TwentyFourHourClockWidget"
+            android:name="TwentyFourHourClockWidgetResizable"
             android:label="@string/widget_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -52,7 +53,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget" />
+                android:resource="@xml/widget_resizable" />
 
             <intent-filter>
                 <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />
@@ -61,7 +62,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="TwentyFourHourClockWidget2x"
+            android:name="TwentyFourHourClockWidget"
             android:label="@string/widget_name_2x" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -69,7 +70,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_2x" />
+                android:resource="@xml/widget" />
 
             <intent-filter>
                 <action android:name="info.staticfree.android.twentyfourhour.ACTION_CLOCK_UPDATE" />

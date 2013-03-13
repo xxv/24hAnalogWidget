@@ -7,6 +7,6 @@ public class TwentyFourHourClockWidget2x extends TwentyFourHourClockWidget {
 
 	@Override
 	protected float getSize(Context context) {
-		return 196 * getDisplayDensity(context);
+        return 196f * getDisplayDensity(context);
 	}
 }

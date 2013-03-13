@@ -1,7 +1,7 @@
 package info.staticfree.android.twentyfourhour;
 
 /*
- * Copyright (C) 2011-2012 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2013 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

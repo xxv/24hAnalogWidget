@@ -3,18 +3,16 @@ package info.staticfree.android.twentyfourhour;
 /*
  * Copyright (C) 2011-2012 Steve Pomeroy <steve@staticfree.info>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.util.Calendar;
@@ -39,7 +37,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	private static final String TAG = TwentyFourHourClockWidgetResizable.class.getSimpleName();
 
 	private Analog24HClock clock;
-    private boolean mFirst = true;
+	private boolean mFirst = true;
 
 	/**
 	 * Sending this broadcast intent will cause the clock widgets to update.
@@ -57,7 +55,8 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	public void onDisabled(Context context) {
 		super.onDisabled(context);
 
-		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		final AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
 
 		alarmManager.cancel(createUpdate(context));
 	}
@@ -68,13 +67,13 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 
 		final String action = intent.getAction();
 
-		if (ACTION_CLOCK_UPDATE.equals(action) ||
-				Intent.ACTION_TIME_CHANGED.equals(action) ||
-				Intent.ACTION_TIMEZONE_CHANGED.equals(action)){
-			final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass().getName());
+		if (ACTION_CLOCK_UPDATE.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action)
+				|| Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
+			final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass()
+					.getName());
 			final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 			final int ids[] = appWidgetManager.getAppWidgetIds(appWidgets);
-			if (ids.length > 0){
+			if (ids.length > 0) {
 				onUpdate(context, appWidgetManager, ids);
 			}
 		}
@@ -85,13 +84,12 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	}
 
 	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
-			int[] appWidgetIds) {
+	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
 
-		if (clock == null){
+		if (clock == null) {
 			clock = new Analog24HClock(context);
-            clock.setShowSeconds(false);
+			clock.setShowSeconds(false);
 			clock.addDialOverlay(new SunPositionOverlay(context));
 
 			final int s = (int) getSize(context);
@@ -102,43 +100,43 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 			clock.setDrawingCacheEnabled(true);
 
 			final PendingIntent intent = ClockUtil.getClockIntent(context);
-			if (intent != null){
+			if (intent != null) {
 				rv.setOnClickPendingIntent(R.id.clock, intent);
 			}
 		}
 
-        Bitmap cached = null;
-        cached = clock.getDrawingCache(true);
+		Bitmap cached = null;
+		cached = clock.getDrawingCache(true);
 
-        boolean shouldRecycle = false;
+		boolean shouldRecycle = false;
 
-        if (cached == null) {
-            final int s = (int) getSize(context);
-            cached = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
-            final Canvas c = new Canvas(cached);
-            clock.draw(c);
+		if (cached == null) {
+			final int s = (int) getSize(context);
+			cached = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
+			final Canvas c = new Canvas(cached);
+			clock.draw(c);
 
-            // make it immutable
-            cached = Bitmap.createBitmap(cached);
-            shouldRecycle = true;
-        }
-
-		if (cached != null){
-			rv.setImageViewBitmap(R.id.clock, cached);
-        } else {
-            Log.e(TAG, "Could not render widget to bitmap");
+			// make it immutable
+			cached = Bitmap.createBitmap(cached);
+			shouldRecycle = true;
 		}
 
-        if (!mFirst && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (cached != null) {
+			rv.setImageViewBitmap(R.id.clock, cached);
+		} else {
+			Log.e(TAG, "Could not render widget to bitmap");
+		}
 
-            appWidgetManager.partiallyUpdateAppWidget(appWidgetIds, rv);
-        } else {
-            appWidgetManager.updateAppWidget(appWidgetIds, rv);
-            mFirst = false;
-        }
-        if (shouldRecycle) {
-            cached.recycle();
-        }
+		if (!mFirst && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+			appWidgetManager.partiallyUpdateAppWidget(appWidgetIds, rv);
+		} else {
+			appWidgetManager.updateAppWidget(appWidgetIds, rv);
+			mFirst = false;
+		}
+		if (shouldRecycle) {
+			cached.recycle();
+		}
 	}
 
 	protected float getDisplayDensity(Context context) {
@@ -153,8 +151,9 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	 *
 	 * @param context
 	 */
-	private void startTicking(Context context){
-		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+	private void startTicking(Context context) {
+		final AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
 
 		// schedules updates so they occur on the top of the minute
 		final Calendar c = Calendar.getInstance();
@@ -162,8 +161,8 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.MINUTE, 1);
-        alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60,
-                createUpdate(context));
+		alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60,
+				createUpdate(context));
 	}
 
 	/**
@@ -172,8 +171,8 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	 * @param context
 	 * @return
 	 */
-	private PendingIntent createUpdate(Context context){
-		return PendingIntent.getBroadcast(context, 0,
-				new Intent(ACTION_CLOCK_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);
+	private PendingIntent createUpdate(Context context) {
+		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE),
+				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }

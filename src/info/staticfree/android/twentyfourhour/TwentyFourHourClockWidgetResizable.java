@@ -27,6 +27,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -37,6 +39,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	private static final String TAG = TwentyFourHourClockWidgetResizable.class.getSimpleName();
 
 	private Analog24HClock clock;
+    private boolean mFirst = true;
 
 	/**
 	 * Sending this broadcast intent will cause the clock widgets to update.
@@ -48,7 +51,6 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 		super.onEnabled(context);
 
 		startTicking(context);
-		clock = new Analog24HClock(context);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 
 		if (clock == null){
 			clock = new Analog24HClock(context);
-			clock.setShowSeconds(false);
+            clock.setShowSeconds(false);
 			clock.addDialOverlay(new SunPositionOverlay(context));
 
 			final int s = (int) getSize(context);
@@ -105,12 +107,38 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 			}
 		}
 
-		final Bitmap cached = clock.getDrawingCache(true);
+        Bitmap cached = null;
+        cached = clock.getDrawingCache(true);
+
+        boolean shouldRecycle = false;
+
+        if (cached == null) {
+            final int s = (int) getSize(context);
+            cached = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
+            final Canvas c = new Canvas(cached);
+            clock.draw(c);
+
+            // make it immutable
+            cached = Bitmap.createBitmap(cached);
+            shouldRecycle = true;
+        }
+
 		if (cached != null){
 			rv.setImageViewBitmap(R.id.clock, cached);
+        } else {
+            Log.e(TAG, "Could not render widget to bitmap");
 		}
 
-		appWidgetManager.updateAppWidget(appWidgetIds, rv);
+        if (!mFirst && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            appWidgetManager.partiallyUpdateAppWidget(appWidgetIds, rv);
+        } else {
+            appWidgetManager.updateAppWidget(appWidgetIds, rv);
+            mFirst = false;
+        }
+        if (shouldRecycle) {
+            cached.recycle();
+        }
 	}
 
 	protected float getDisplayDensity(Context context) {
@@ -134,7 +162,8 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.MINUTE, 1);
-		alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60, createUpdate(context));
+        alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60,
+                createUpdate(context));
 	}
 
 	/**

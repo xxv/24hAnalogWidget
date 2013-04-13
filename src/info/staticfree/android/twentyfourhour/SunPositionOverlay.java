@@ -1,7 +1,7 @@
 package info.staticfree.android.twentyfourhour;
 
 /*
- * Copyright (C) 2011-2012 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2013 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,10 @@ package info.staticfree.android.twentyfourhour;
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 20130315 - modified to add Civil, Nautical, Astronomical twilight
+ * times by Rob Prior <android@b4.ca>
+ *
  */
 
 import info.staticfree.android.twentyfourhour.Analog24HClock.DialOverlay;
@@ -48,13 +52,29 @@ public class SunPositionOverlay implements DialOverlay {
 
 	private Location mLocation;
 
-	private static Paint OVERLAY_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG) ;
 	private static Paint OVERLAY_NO_INFO_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-	static {
-		OVERLAY_PAINT.setARGB(50, 0, 0, 0);
-		OVERLAY_PAINT.setStyle(Paint.Style.FILL);
+	private static Paint OVERLAY_SUN = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private static Paint OVERLAY_NIGHT = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private static Paint OVERLAY_CIVIL = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private static Paint OVERLAY_NAUTICAL = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private static Paint OVERLAY_ASTRO = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+	static {
+		OVERLAY_SUN.setARGB(255, 255, 201, 14);		// Orange for Sun
+		OVERLAY_SUN.setStyle(Paint.Style.FILL);
+
+		OVERLAY_NIGHT.setARGB(60, 0, 0, 0);			// 20% grey for Sunrise/Sunset
+		OVERLAY_NIGHT.setStyle(Paint.Style.FILL);
+
+		OVERLAY_CIVIL.setARGB(80, 0, 0, 0);			// 40% Grey for Civil Twilight
+		OVERLAY_CIVIL.setStyle(Paint.Style.FILL);
+
+		OVERLAY_NAUTICAL.setARGB(100, 0, 0, 0);		// 60% Grey for Nautical Twilight
+		OVERLAY_NAUTICAL.setStyle(Paint.Style.FILL);
+
+		OVERLAY_ASTRO.setARGB(125, 0, 0, 0);			// 80% Grey for Astronomical Twilight
+		OVERLAY_ASTRO.setStyle(Paint.Style.FILL);
 	}
 
 	public SunPositionOverlay(Context context){
@@ -128,14 +148,38 @@ public class SunPositionOverlay implements DialOverlay {
 		final boolean dst = calendar.get(Calendar.DST_OFFSET) != 0;
 
 		try {
-			final Time sunrise = Sun.sunriseTime(calendar, ll, tz, dst);
-			final float sunriseAngle = getHourArcAngle(sunrise.getHours(), sunrise.getMinutes());
+			final Time morningSunrise = Sun.sunriseTime(calendar, ll, tz, dst);
+			final Time morningCivil = Sun.morningCivilTwilightTime(calendar, ll, tz, dst);
+			final Time morningNautical = Sun.morningNauticalTwilightTime(calendar, ll, tz, dst);
+			final Time morningAstro = Sun.morningAstronomicalTwilightTime(calendar, ll, tz, dst);
 
-			final Time sunset = Sun.sunsetTime(calendar, ll, tz, dst);
-			final float sunsetAngle = getHourArcAngle(sunset.getHours(), sunset.getMinutes());
+			final float morningSunAngle = getHourArcAngle(morningSunrise.getHours(), morningSunrise.getMinutes());
+			final float morningCivAngle = getHourArcAngle(morningCivil.getHours(), morningCivil.getMinutes());
+			final float morningNauAngle = getHourArcAngle(morningNautical.getHours(), morningNautical.getMinutes());
+			final float morningAstAngle = getHourArcAngle(morningAstro.getHours(), morningAstro.getMinutes());
 
-			canvas.drawArc(inset, sunsetAngle, (360 + (sunriseAngle - sunsetAngle)) % 360, true,
-					OVERLAY_PAINT);
+			final Time eveningSunset = Sun.sunsetTime(calendar, ll, tz, dst);
+			final Time eveningCivil = Sun.eveningCivilTwilightTime(calendar, ll, tz, dst);
+			final Time eveningNautical = Sun.eveningNauticalTwilightTime(calendar, ll, tz, dst);
+			final Time eveningAstro = Sun.eveningAstronomicalTwilightTime(calendar, ll, tz, dst);
+
+			final float eveningSunAngle = getHourArcAngle(eveningSunset.getHours(), eveningSunset.getMinutes());
+			final float eveningCivAngle = getHourArcAngle(eveningCivil.getHours(), eveningCivil.getMinutes());
+			final float eveningNauAngle = getHourArcAngle(eveningNautical.getHours(), eveningNautical.getMinutes());
+			final float eveningAstAngle = getHourArcAngle(eveningAstro.getHours(), eveningAstro.getMinutes());
+
+			final float highNoon = 0.5f * (eveningSunAngle + morningSunAngle) + 180f;
+
+			canvas.drawArc(inset, eveningSunAngle, (360 + (morningSunAngle - eveningSunAngle)) % 360, true,
+					OVERLAY_NIGHT);
+			canvas.drawArc(inset, eveningCivAngle, (360 + (morningCivAngle - eveningCivAngle)) % 360, true,
+					OVERLAY_CIVIL);
+			canvas.drawArc(inset, eveningNauAngle, (360 + (morningNauAngle - eveningNauAngle)) % 360, true,
+					OVERLAY_NAUTICAL);
+			canvas.drawArc(inset, eveningAstAngle, (360 + (morningAstAngle - eveningAstAngle)) % 360, true,
+					OVERLAY_ASTRO);
+
+			canvas.drawArc(inset, highNoon - 3, 6 , true, OVERLAY_SUN);
 
 			// this can happen when lat/lon and the timezone are out of sync, causing impossible
 			// sunrise/sunset times to be calculated.

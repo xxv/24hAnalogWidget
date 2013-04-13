@@ -1,4 +1,4 @@
-package info.staticfree.android.twentyfourhour;
+package info.staticfree.android.twentyfourhour.overlay;
 
 /*
  * Copyright (C) 2011-2013 Steve Pomeroy <steve@staticfree.info>
@@ -21,7 +21,7 @@ package info.staticfree.android.twentyfourhour;
  *
  */
 
-import info.staticfree.android.twentyfourhour.Analog24HClock.DialOverlay;
+import info.staticfree.android.twentyfourhour.R;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -121,7 +121,7 @@ public class SunPositionOverlay implements DialOverlay {
 	}
 
 	private float getHourArcAngle(int h, int m) {
-		return (Analog24HClock.getHourHandAngle(h, m) + 270) % 360.0f;
+		return (HandsOverlay.getHourHandAngle(h, m) + 270) % 360.0f;
 	}
 
 	private void drawPlaceholder(Canvas canvas) {
@@ -129,7 +129,8 @@ public class SunPositionOverlay implements DialOverlay {
 	}
 
 	@Override
-	public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar) {
+	public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
+			boolean sizeChanged) {
 		final Location loc = mLocation != null ? mLocation : getRecentLocation();
 		final int insetW = (int) (w / 2.0f / 2.0f);
 		final int insetH = (int) (h / 2.0f / 2.0f);

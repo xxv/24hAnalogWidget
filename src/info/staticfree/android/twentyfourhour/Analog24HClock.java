@@ -33,6 +33,9 @@ package info.staticfree.android.twentyfourhour;
  */
 
 
+import info.staticfree.android.twentyfourhour.overlay.DialOverlay;
+import info.staticfree.android.twentyfourhour.overlay.HandsOverlay;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -59,20 +62,14 @@ import android.view.View;
 public class Analog24HClock extends View {
 
 	private boolean mShowNow = true;
-	private boolean mShowSeconds = true;
 
 	private static final int UPDATE_INTERVAL = 1000 * 15;
 
 	private Calendar mCalendar;
 	private Drawable mFace;
-	private Drawable mHour;
-	private Drawable mMinute;
 
 	private int mDialWidth;
 	private int mDialHeight;
-
-	private float mHourRot;
-	private float mMinRot;
 
 	private boolean mKeepon = false;
 	private int mBottom;
@@ -82,36 +79,39 @@ public class Analog24HClock extends View {
 	private boolean mSizeChanged;
 	private boolean mUseLargeFace = false;
 
+	private HandsOverlay mHandsOverlay;
+
 	private final ArrayList<DialOverlay> mDialOverlay = new ArrayList<DialOverlay>();
 	private boolean mAttached = false;
 
 	public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		init();
+		init(context);
 	}
 
 	public Analog24HClock(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init();
+		init(context);
 	}
 
 	public Analog24HClock(Context context) {
 		super(context);
 
-		init();
+		init(context);
 	}
 
-	private void init() {
+	private void init(Context context) {
 		final Resources r = getResources();
 		mFace = r.getDrawable(mUseLargeFace ? R.drawable.clock_face_large : R.drawable.clock_face);
-		mHour = r.getDrawable(mUseLargeFace ? R.drawable.hour_hand_large : R.drawable.hour_hand);
-		mMinute = r.getDrawable(mUseLargeFace ? R.drawable.minute_hand_large
-				: R.drawable.minute_hand);
+
 
 		mCalendar = Calendar.getInstance();
 
 		mDialHeight = mFace.getIntrinsicHeight();
 		mDialWidth = mFace.getIntrinsicWidth();
+
+		mHandsOverlay = new HandsOverlay(context, mUseLargeFace);
+
 	}
 
 	/**
@@ -125,7 +125,6 @@ public class Analog24HClock extends View {
 		setShowNow(false);
 		mCalendar.setTimeInMillis(time);
 
-		updateHands();
 		invalidate();
 	}
 
@@ -139,7 +138,6 @@ public class Analog24HClock extends View {
 		setShowNow(false);
 		mCalendar = calendar;
 
-		updateHands();
 		invalidate();
 	}
 
@@ -167,7 +165,7 @@ public class Analog24HClock extends View {
 	 * @param showSeconds
 	 */
 	public void setShowSeconds(boolean showSeconds) {
-		mShowSeconds = showSeconds;
+		mHandsOverlay.setShowSeconds(showSeconds);
 	}
 
 	/**
@@ -224,9 +222,10 @@ public class Analog24HClock extends View {
 
 		mUseLargeFace = w > mDialWidth || h > mDialHeight;
 
+
 		// reinitialize if we need to switch face images
 		if (prevUseLargeFace != mUseLargeFace) {
-			init();
+			init(getContext());
 		}
 
 		mSizeChanged = true;
@@ -243,8 +242,6 @@ public class Analog24HClock extends View {
 		if (mShowNow) {
 			mCalendar.setTimeInMillis(System.currentTimeMillis());
 
-			updateHands();
-
 			if (mKeepon) {
 				postInvalidateDelayed(UPDATE_INTERVAL);
 			}
@@ -256,8 +253,8 @@ public class Analog24HClock extends View {
 		final int cX = availW / 2;
 		final int cY = availH / 2;
 
-		int w = mDialWidth;
-		int h = mDialHeight;
+		final int w = mDialWidth;
+		final int h = mDialHeight;
 
 		boolean scaled = false;
 
@@ -277,32 +274,10 @@ public class Analog24HClock extends View {
 		mFace.draw(canvas);
 
 		for (final DialOverlay overlay : mDialOverlay){
-			overlay.onDraw(canvas, cX, cY, w, h, mCalendar);
+			overlay.onDraw(canvas, cX, cY, w, h, mCalendar, sizeChanged);
 		}
 
-		canvas.save();
-		canvas.rotate(mHourRot, cX, cY);
-
-		if (sizeChanged) {
-			w = mHour.getIntrinsicWidth();
-			h = mHour.getIntrinsicHeight();
-			mHour.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY
-					+ (h / 2));
-		}
-		mHour.draw(canvas);
-		canvas.restore();
-
-		canvas.save();
-		canvas.rotate(mMinRot, cX, cY);
-
-		if (sizeChanged) {
-			w = mMinute.getIntrinsicWidth();
-			h = mMinute.getIntrinsicHeight();
-			mMinute.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY
-					+ (h / 2));
-		}
-		mMinute.draw(canvas);
-		canvas.restore();
+		mHandsOverlay.onDraw(canvas, cX, cY, w, h, mCalendar, sizeChanged);
 
 		if (scaled) {
 			canvas.restore();
@@ -358,21 +333,7 @@ public class Analog24HClock extends View {
 		mBottom = bottom;
 	}
 
-	private void updateHands() {
 
-
-		final int h = mCalendar.get(Calendar.HOUR_OF_DAY);
-		final int m = mCalendar.get(Calendar.MINUTE);
-		final int s = mCalendar.get(Calendar.SECOND);
-
-		mHourRot = getHourHandAngle(h, m);
-		mMinRot = (m / 60.0f) * 360
-				+ (mShowSeconds ? ((s / 60.0f) * 360 / 60.0f) : 0);
-	}
-
-	public static float getHourHandAngle(int h, int m){
-		return ((12 + h) / 24.0f * 360) % 360 + (m / 60.0f) * 360 / 24.0f;
-	}
 
 	public void addDialOverlay (DialOverlay dialOverlay){
 		mDialOverlay.add(dialOverlay);
@@ -380,12 +341,6 @@ public class Analog24HClock extends View {
 
 	public void removeDialOverlay (DialOverlay dialOverlay){
 		mDialOverlay.remove(dialOverlay);
-	}
-
-	public interface DialOverlay {
-
-		public abstract void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar);
-
 	}
 
 	private final BroadcastReceiver mClockChangeReceiver = new BroadcastReceiver() {
@@ -399,7 +354,7 @@ public class Analog24HClock extends View {
 				mCalendar = Calendar.getInstance(TimeZone.getTimeZone(tz));
 			}
 
-			updateHands();
+
 			invalidate();
 		}
 

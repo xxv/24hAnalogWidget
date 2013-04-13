@@ -15,6 +15,8 @@ package info.staticfree.android.twentyfourhour;
  * not, see <http://www.gnu.org/licenses/>.
  */
 
+import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
+
 import java.util.Calendar;
 
 import android.app.AlarmManager;

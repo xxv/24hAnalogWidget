@@ -64,16 +64,16 @@ public class SunPositionOverlay implements DialOverlay {
 		OVERLAY_SUN.setARGB(127, 255, 201, 14); // Orange for Sun
 		OVERLAY_SUN.setStyle(Paint.Style.FILL);
 
-		OVERLAY_NIGHT.setARGB(26, 0, 0, 0); // 10% grey for Sunrise/Sunset
+		OVERLAY_NIGHT.setARGB(20, 0, 0, 0); // Sunrise/Sunset
 		OVERLAY_NIGHT.setStyle(Paint.Style.FILL);
 
-		OVERLAY_CIVIL.setARGB(38, 0, 0, 0); // 15% Grey for Civil Twilight
+		OVERLAY_CIVIL.setARGB(20, 0, 0, 0); // Civil Twilight
 		OVERLAY_CIVIL.setStyle(Paint.Style.FILL);
 
-		OVERLAY_NAUTICAL.setARGB(51, 0, 0, 0); // 20% Grey for Nautical Twilight
+		OVERLAY_NAUTICAL.setARGB(20, 0, 0, 0); // Nautical Twilight
 		OVERLAY_NAUTICAL.setStyle(Paint.Style.FILL);
 
-		OVERLAY_ASTRO.setARGB(64, 0, 0, 0); // 25% Grey for Astronomical Twilight
+		OVERLAY_ASTRO.setARGB(20, 0, 0, 0); // Astronomical Twilight
 		OVERLAY_ASTRO.setStyle(Paint.Style.FILL);
 	}
 

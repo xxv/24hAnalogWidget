@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -43,6 +44,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+       <activity android:theme="@*android:style/Theme.DeviceDefault.NoActionBar" android:label="24h Analog" android:name="Face" android:enabled="true" android:taskAffinity="" android:allowEmbedded="true">
+            <meta-data android:name="com.google.android.clockwork.home.preview" android:resource="@drawable/ic_launcher" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.google.android.clockwork.home.category.HOME_BACKGROUND" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name="TwentyFourHourClockWidgetResizable"
             android:label="@string/widget_name" >

@@ -17,9 +17,10 @@ package info.staticfree.android.twentyfourhour;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
 import android.app.Activity;
 import android.os.Bundle;
+
+import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
 
 public class WidgetDemo extends Activity {
 

@@ -32,7 +32,7 @@ public class AnalogClockApplication extends Application {
         // resizable widget
 
         pm.setComponentEnabledSetting(new ComponentName(this,
-                TwentyFourHourClockWidgetResizable.class),
+                        TwentyFourHourClockWidgetResizable.class),
                 supportsResize ? PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
                         : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);

@@ -15,10 +15,6 @@ package info.staticfree.android.twentyfourhour;
  * not, see <http://www.gnu.org/licenses/>.
  */
 
-import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
-
-import java.util.Calendar;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -33,6 +29,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
+
+import java.util.Calendar;
+
+import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
 
 public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 

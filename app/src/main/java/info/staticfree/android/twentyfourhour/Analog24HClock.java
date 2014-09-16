@@ -222,7 +222,6 @@ public class Analog24HClock extends View {
 
 		mUseLargeFace = w > mDialWidth || h > mDialHeight;
 
-
 		// reinitialize if we need to switch face images
 		if (prevUseLargeFace != mUseLargeFace) {
 			init(getContext());

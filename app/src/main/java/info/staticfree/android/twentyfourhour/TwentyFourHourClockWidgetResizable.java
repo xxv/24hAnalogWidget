@@ -40,6 +40,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 
 	private Analog24HClock clock;
 	private boolean mFirst = true;
+    private Bitmap mCached = null;
 
 	/**
 	 * Sending this broadcast intent will cause the clock widgets to update.
@@ -105,26 +106,25 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 			if (intent != null) {
 				rv.setOnClickPendingIntent(R.id.clock, intent);
 			}
-		}
 
-		Bitmap cached = null;
-		cached = clock.getDrawingCache(true);
+            mCached = clock.getDrawingCache(true);
+		}
 
 		boolean shouldRecycle = false;
 
-		if (cached == null) {
+		if (mCached == null) {
 			final int s = (int) getSize(context);
-			cached = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
-			final Canvas c = new Canvas(cached);
+			mCached = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
+			final Canvas c = new Canvas(mCached);
 			clock.draw(c);
 
 			// make it immutable
-			cached = Bitmap.createBitmap(cached);
+			mCached = Bitmap.createBitmap(mCached);
 			shouldRecycle = true;
 		}
 
-		if (cached != null) {
-			rv.setImageViewBitmap(R.id.clock, cached);
+		if (mCached != null) {
+			rv.setImageViewBitmap(R.id.clock, mCached);
 		} else {
 			Log.e(TAG, "Could not render widget to bitmap");
 		}
@@ -137,7 +137,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 			mFirst = false;
 		}
 		if (shouldRecycle) {
-			cached.recycle();
+			mCached.recycle();
 		}
 	}
 
@@ -151,7 +151,7 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	/**
 	 * Schedules an alarm to update the clock every minute, at the top of the minute.
 	 *
-	 * @param context
+	 * @param context application context
 	 */
 	private void startTicking(Context context) {
 		final AlarmManager alarmManager = (AlarmManager) context
@@ -170,8 +170,8 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 	/**
 	 * Creates an intent to update the clock(s).
 	 *
-	 * @param context
-	 * @return
+	 * @param context application context
+	 * @return the intent to update the clock
 	 */
 	private PendingIntent createUpdate(Context context) {
 		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE),

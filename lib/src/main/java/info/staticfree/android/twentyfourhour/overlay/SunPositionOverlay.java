@@ -21,14 +21,6 @@ package info.staticfree.android.twentyfourhour.overlay;
  *
  */
 
-import info.staticfree.android.twentyfourhour.R;
-
-import java.util.Calendar;
-import java.util.TimeZone;
-
-import uk.me.jstott.coordconv.LatitudeLongitude;
-import uk.me.jstott.sun.Sun;
-import uk.me.jstott.sun.Time;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -40,6 +32,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.util.Log;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import info.staticfree.android.twentyfourhour.lib.R;
+import uk.me.jstott.coordconv.LatitudeLongitude;
+import uk.me.jstott.sun.Sun;
+import uk.me.jstott.sun.Time;
 
 public class SunPositionOverlay implements DialOverlay {
 

@@ -1,13 +1,13 @@
 package info.staticfree.android.twentyfourhour.overlay;
 
-import info.staticfree.android.twentyfourhour.R;
-
-import java.util.Calendar;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+
+import java.util.Calendar;
+
+import info.staticfree.android.twentyfourhour.lib.R;
 
 public class HandsOverlay implements DialOverlay {
 

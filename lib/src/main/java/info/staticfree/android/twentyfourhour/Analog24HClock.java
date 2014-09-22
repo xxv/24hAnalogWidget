@@ -36,7 +36,6 @@ package info.staticfree.android.twentyfourhour;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -47,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import info.staticfree.android.twentyfourhour.lib.R;
 import info.staticfree.android.twentyfourhour.overlay.DialOverlay;
 import info.staticfree.android.twentyfourhour.overlay.HandsOverlay;
 
@@ -62,15 +62,12 @@ public class Analog24HClock extends View {
 
     private boolean mShowNow = true;
 
-    private static final int UPDATE_INTERVAL = 1000 * 15;
-
     private Calendar mCalendar;
     private Drawable mFace;
 
     private int mDialWidth;
     private int mDialHeight;
 
-    private boolean mKeepon = false;
     private int mBottom;
     private int mTop;
     private int mLeft;
@@ -81,7 +78,6 @@ public class Analog24HClock extends View {
     private HandsOverlay mHandsOverlay;
 
     private final ArrayList<DialOverlay> mDialOverlay = new ArrayList<DialOverlay>();
-    private boolean mAttached = false;
 
     public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -100,17 +96,18 @@ public class Analog24HClock extends View {
     }
 
     private void init(Context context) {
-        final Resources r = getResources();
-        mFace = r.getDrawable(mUseLargeFace ? R.drawable.clock_face_large : R.drawable.clock_face);
-
+        setFace(mUseLargeFace ? R.drawable.clock_face_large : R.drawable.clock_face);
 
         mCalendar = Calendar.getInstance();
 
+        mHandsOverlay = new HandsOverlay(context, mUseLargeFace);
+    }
+
+    public void setFace(int drawableRes){
+        final Resources r = getResources();
+        mFace = r.getDrawable(drawableRes);
         mDialHeight = mFace.getIntrinsicHeight();
         mDialWidth = mFace.getIntrinsicWidth();
-
-        mHandsOverlay = new HandsOverlay(context, mUseLargeFace);
-
     }
 
     /**
@@ -145,13 +142,6 @@ public class Analog24HClock extends View {
      */
     public void setShowNow(boolean showNow) {
         mShowNow = showNow;
-        if (mAttached) {
-            if (mShowNow) {
-                registerReceivers();
-            } else {
-                unregisterReceivers();
-            }
-        }
     }
 
     /**
@@ -174,41 +164,8 @@ public class Analog24HClock extends View {
         mCalendar = Calendar.getInstance(timezone);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        mKeepon = true;
-
-        if (!mAttached) {
-            mAttached = true;
-            if (mShowNow) {
-                registerReceivers();
-            }
-        }
-    }
-
-    private void registerReceivers() {
-        final IntentFilter clockFilter = new IntentFilter();
-        clockFilter.addAction(Intent.ACTION_TIME_CHANGED);
-        clockFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        getContext().registerReceiver(mClockChangeReceiver, clockFilter);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        mKeepon = false;
-        if (mAttached) {
-            if (mShowNow) {
-                unregisterReceivers();
-            }
-            mAttached = false;
-        }
-    }
-
-    private void unregisterReceivers() {
-        getContext().unregisterReceiver(mClockChangeReceiver);
+    public void setHandsOverlay(HandsOverlay handsOverlay) {
+        mHandsOverlay = handsOverlay;
     }
 
     @Override
@@ -221,7 +178,7 @@ public class Analog24HClock extends View {
 
         // reinitialize if we need to switch face images
         if (prevUseLargeFace != mUseLargeFace) {
-            init(getContext());
+            //init(getContext());
         }
 
         mSizeChanged = true;
@@ -237,10 +194,6 @@ public class Analog24HClock extends View {
 
         if (mShowNow) {
             mCalendar.setTimeInMillis(System.currentTimeMillis());
-
-            if (mKeepon) {
-                postInvalidateDelayed(UPDATE_INTERVAL);
-            }
         }
 
         final int availW = mRight - mLeft;
@@ -348,7 +301,6 @@ public class Analog24HClock extends View {
                 final String tz = intent.getStringExtra("time-zone");
                 mCalendar = Calendar.getInstance(TimeZone.getTimeZone(tz));
             }
-
 
             invalidate();
         }

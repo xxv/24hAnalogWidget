@@ -20,5 +20,4 @@ android {
 
 dependencies {
     compile project(':lib')
-    wearApp project(':wear')
 }

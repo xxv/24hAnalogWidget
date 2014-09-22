@@ -1,1 +1,1 @@
-include ':app', ':wear', ':lib'
+include ':phoneWidget', ':wear', ':lib'

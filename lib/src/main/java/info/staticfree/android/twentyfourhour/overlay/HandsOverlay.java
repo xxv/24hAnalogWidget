@@ -29,6 +29,15 @@ public class HandsOverlay implements DialOverlay {
 				: R.drawable.minute_hand);
 	}
 
+    public HandsOverlay(Context context, int hourHandRes, int minuteHandRes) {
+        final Resources r = context.getResources();
+
+        mUseLargeFace = false;
+
+        mHour = r.getDrawable(hourHandRes);
+        mMinute = r.getDrawable(minuteHandRes);
+    }
+
 	@Override
 	public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
 			boolean sizeChanged) {

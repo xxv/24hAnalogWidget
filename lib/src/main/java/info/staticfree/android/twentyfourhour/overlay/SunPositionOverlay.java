@@ -77,7 +77,9 @@ public class SunPositionOverlay implements DialOverlay {
 		OVERLAY_ASTRO.setStyle(Paint.Style.FILL);
 	}
 
-	public SunPositionOverlay(Context context) {
+    private float mScale;
+
+    public SunPositionOverlay(Context context) {
 		mLm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
 		OVERLAY_NO_INFO_PAINT.setShader(new BitmapShader(BitmapFactory.decodeResource(
@@ -112,6 +114,17 @@ public class SunPositionOverlay implements DialOverlay {
 		}
 	}
 
+    public void setScale(float scale){
+        mScale = scale;
+    }
+
+    public void setShadeAlpha(int alpha){
+        OVERLAY_ASTRO.setAlpha(alpha);
+        OVERLAY_CIVIL.setAlpha(alpha);
+        OVERLAY_NAUTICAL.setAlpha(alpha);
+        OVERLAY_NIGHT.setAlpha(alpha);
+    }
+
 	public void setLocation(Location location) {
 		mLocation = location;
 	}
@@ -132,9 +145,9 @@ public class SunPositionOverlay implements DialOverlay {
 	public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
 			boolean sizeChanged) {
 		final Location loc = mLocation != null ? mLocation : getRecentLocation();
-		final int insetW = (int) (w / 2.0f / 2.0f);
-		final int insetH = (int) (h / 2.0f / 2.0f);
-		inset.set(cX - insetW, cY - insetH, cX + insetW, cY + insetH);
+        final int insetW = (int) (w / 2.0f * mScale);
+        final int insetH = (int) (h / 2.0f * mScale);
+        inset.set(cX - insetW, cY - insetH, cX + insetW, cY + insetH);
 
 		if (loc == null) {
 			// not much we can do if we don't have a location

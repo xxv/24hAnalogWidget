@@ -1,7 +1,7 @@
 package info.staticfree.android.twentyfourhour.overlay;
 
 /*
- * Copyright (C) 2011-2013 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2014 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ public class SunPositionOverlay implements DialOverlay {
 		OVERLAY_ASTRO.setStyle(Paint.Style.FILL);
 	}
 
-    private float mScale;
+    private float mScale = 0.5f;
 
     public SunPositionOverlay(Context context) {
 		mLm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

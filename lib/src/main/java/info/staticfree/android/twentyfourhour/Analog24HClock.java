@@ -1,6 +1,6 @@
 package info.staticfree.android.twentyfourhour;
 /*
- * Copyright (C) 2011 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2014 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -60,8 +61,6 @@ import info.staticfree.android.twentyfourhour.overlay.HandsOverlay;
  */
 public class Analog24HClock extends View {
 
-    private boolean mShowNow = true;
-
     private Calendar mCalendar;
     private Drawable mFace;
 
@@ -73,7 +72,6 @@ public class Analog24HClock extends View {
     private int mLeft;
     private int mRight;
     private boolean mSizeChanged;
-    private boolean mUseLargeFace = false;
 
     private HandsOverlay mHandsOverlay;
 
@@ -81,67 +79,77 @@ public class Analog24HClock extends View {
 
     public Analog24HClock(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init(context, attrs, defStyle);
     }
 
     public Analog24HClock(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init(context, attrs, 0);
     }
 
     public Analog24HClock(Context context) {
         super(context);
 
-        init(context);
+        init(context, null, 0);
     }
 
-    private void init(Context context) {
-        setFace(mUseLargeFace ? R.drawable.clock_face_large : R.drawable.clock_face);
+    private void init(Context context, AttributeSet attributeSet, int defStyle) {
+        final TypedArray attrs = context.obtainStyledAttributes(attributeSet, R.styleable.Analog24HClock, defStyle, 0);
+        Drawable face = attrs.getDrawable(R.styleable.Analog24HClock_face);
+
+        if (face != null) {
+            setFace(face);
+        } else {
+            setFace(R.drawable.clock_face);
+        }
+
+        Drawable hourHand = attrs.getDrawable(R.styleable.Analog24HClock_hour_hand);
+        if (hourHand == null) {
+            hourHand = context.getResources().getDrawable(R.drawable.hour_hand);
+        }
+
+        Drawable minuteHand = attrs.getDrawable(R.styleable.Analog24HClock_minute_hand);
+        if (minuteHand == null) {
+            minuteHand = context.getResources().getDrawable(R.drawable.minute_hand);
+        }
 
         mCalendar = Calendar.getInstance();
 
-        mHandsOverlay = new HandsOverlay(context, mUseLargeFace);
+        mHandsOverlay = new HandsOverlay(hourHand, minuteHand);
     }
 
-    public void setFace(int drawableRes){
+    public void setFace(int drawableRes) {
         final Resources r = getResources();
-        mFace = r.getDrawable(drawableRes);
+        setFace(r.getDrawable(drawableRes));
+    }
+
+    public void setFace(Drawable face) {
+        mFace = face;
         mDialHeight = mFace.getIntrinsicHeight();
         mDialWidth = mFace.getIntrinsicWidth();
     }
 
     /**
      * Sets the currently displayed time in {@link System#currentTimeMillis()}
-     * time. This will clear {@link #setShowNow(boolean)}.
+     * time.
      *
      * @param time the time to display on the clock
      */
     public void setTime(long time) {
-        setShowNow(false);
         mCalendar.setTimeInMillis(time);
 
         invalidate();
     }
 
     /**
-     * Sets the currently displayed time. This will clear {@link #setShowNow(boolean)}.
+     * Sets the currently displayed time.
      *
      * @param calendar The time to display on the clock
      */
     public void setTime(Calendar calendar) {
-        setShowNow(false);
         mCalendar = calendar;
 
         invalidate();
-    }
-
-    /**
-     * When set, the current time in the current timezone will be displayed.
-     *
-     * @param showNow
-     */
-    public void setShowNow(boolean showNow) {
-        mShowNow = showNow;
     }
 
     /**
@@ -172,15 +180,6 @@ public class Analog24HClock extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        final boolean prevUseLargeFace = mUseLargeFace;
-
-        mUseLargeFace = w > mDialWidth || h > mDialHeight;
-
-        // reinitialize if we need to switch face images
-        if (prevUseLargeFace != mUseLargeFace) {
-            //init(getContext());
-        }
-
         mSizeChanged = true;
     }
 
@@ -191,10 +190,6 @@ public class Analog24HClock extends View {
 
         final boolean sizeChanged = mSizeChanged;
         mSizeChanged = false;
-
-        if (mShowNow) {
-            mCalendar.setTimeInMillis(System.currentTimeMillis());
-        }
 
         final int availW = mRight - mLeft;
         final int availH = mBottom - mTop;

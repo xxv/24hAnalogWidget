@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.staticfree.android.twentyfourhour">
+    package="info.staticfree.android.twentyfourhour.wear">
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault">
+        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
         <activity
             android:allowEmbedded="true"
             android:name="info.staticfree.android.twentyfourhour.WearFace"
@@ -16,10 +16,16 @@
             <meta-data
                 android:name="com.google.android.clockwork.home.preview"
                 android:resource="@drawable/widget_preview" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="com.google.android.clockwork.home.category.HOME_BACKGROUND" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

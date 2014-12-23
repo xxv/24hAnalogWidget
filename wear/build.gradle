@@ -1,20 +1,19 @@
 apply plugin: 'com.android.application'
 
-
 android {
-    compileSdkVersion 20
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "info.staticfree.android.twentyfourhour"
+        applicationId "info.staticfree.android.twentyfourhour.wear"
         minSdkVersion 20
-        targetSdkVersion 20
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 21
+        versionCode 2
+        versionName "2.0"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,7 +21,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:1.0.0'
-    compile 'com.google.android.gms:play-services-wearable:5.0.77'
+    compile 'com.google.android.support:wearable:1.1.+'
+    compile 'com.google.android.gms:play-services-wearable:6.5.+'
     compile project(':lib')
 }

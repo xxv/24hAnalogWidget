@@ -4,30 +4,35 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
-        <activity
-            android:allowEmbedded="true"
+        <service
             android:name="info.staticfree.android.twentyfourhour.WearFace"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:allowEmbedded="true"
+            android:taskAffinity=""
+            android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
-                android:name="com.google.android.clockwork.home.preview"
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/widget_preview" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview_circular"
                 android:resource="@drawable/widget_preview" />
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="com.google.android.clockwork.home.category.HOME_BACKGROUND" />
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        </service>
     </application>
 
 </manifest>

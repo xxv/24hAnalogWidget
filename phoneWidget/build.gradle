@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "info.staticfree.android.twentyfourhour"
-        minSdkVersion 8
-        targetSdkVersion 20
+        minSdkVersion 9
+        targetSdkVersion 21
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }

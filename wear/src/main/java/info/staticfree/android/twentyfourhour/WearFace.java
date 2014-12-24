@@ -10,10 +10,19 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.TimeZone;
 
@@ -23,7 +32,9 @@ import info.staticfree.android.twentyfourhour.overlay.SunPositionOverlay;
 import info.staticfree.android.twentyfourhour.wear.R;
 
 public class WearFace extends CanvasWatchFaceService {
-
+    /**
+     * This is scaled based on the background design.
+     */
     public static final float SUN_POSITION_OVERLAY_SCALE = 0.61345f;
 
     @Override
@@ -34,6 +45,54 @@ public class WearFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
         private static final int MSG_UPDATE_TIME = 100;
         private static final long INTERACTIVE_UPDATE_RATE_MS = 60 * 1000;
+
+        private final Analog24HClock mClock = new Analog24HClock(WearFace.this);
+        private boolean mRegisteredTimeZoneReceiver;
+        private boolean mViewSizeInvalid = true;
+        private final SunPositionOverlay mSunPositionOverlay =
+                new SunPositionOverlay(WearFace.this);
+
+        private final GoogleApiClient.ConnectionCallbacks mConnectionCallbacks =
+                new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        setLocation(LocationServices.FusedLocationApi
+                                .getLastLocation(mGoogleApiClient));
+                        requestLocationUpdate();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                };
+        private LocationListener mLocationCallback = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                setLocation(location);
+            }
+        };
+
+        private void setLocation(@Nullable Location lastLocation) {
+            mSunPositionOverlay.setLocation(lastLocation);
+            invalidate();
+        }
+
+        private final GoogleApiClient.OnConnectionFailedListener mConnectionFailedListener =
+                new GoogleApiClient.OnConnectionFailedListener() {
+
+                    @Override
+                    public void onConnectionFailed(ConnectionResult connectionResult) {
+                        Log.d("WearFace", "Error connecting to Google Play Services");
+                    }
+                };
+
+        @Nullable
+        private final GoogleApiClient mGoogleApiClient =
+                new GoogleApiClient.Builder(WearFace.this).addApi(LocationServices.API)
+                        .addApi(Wearable.API).addConnectionCallbacks(mConnectionCallbacks)
+                        .addOnConnectionFailedListener(mConnectionFailedListener).build();
+
         final Handler mUpdateTimeHandler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -50,6 +109,7 @@ public class WearFace extends CanvasWatchFaceService {
                 }
             }
         };
+
         /* receiver to update the time zone */
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
@@ -59,9 +119,6 @@ public class WearFace extends CanvasWatchFaceService {
                 }
             }
         };
-        private boolean mViewSizeInvalid = true;
-        private Analog24HClock mClock;
-        private boolean mRegisteredTimeZoneReceiver;
 
         private void updateTimer() {
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
@@ -76,15 +133,9 @@ public class WearFace extends CanvasWatchFaceService {
         }
 
         private void initializeClock() {
-            mClock = new Analog24HClock(getApplicationContext());
-            SunPositionOverlay sunPositionOverlay = new SunPositionOverlay(getApplicationContext());
-            Location test = new Location("manual");
-            test.setLatitude(42.4);
-            test.setLongitude(-71.1);
-            sunPositionOverlay.setLocation(test);
-            sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
-            sunPositionOverlay.setShadeAlpha(60);
-            mClock.addDialOverlay(sunPositionOverlay);
+            mSunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
+            mSunPositionOverlay.setShadeAlpha(60);
+            mClock.addDialOverlay(mSunPositionOverlay);
 
             DateOverlay dateOverlay = new DateOverlay(30, -30);
             mClock.addDialOverlay(dateOverlay);
@@ -103,8 +154,9 @@ public class WearFace extends CanvasWatchFaceService {
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     .setShowSystemUiTime(false).setHotwordIndicatorGravity(Gravity.CENTER)
-                    .setStatusBarGravity(Gravity.CENTER)
-                    .setViewProtection(WatchFaceStyle.PROTECT_STATUS_BAR)
+                    .setStatusBarGravity(Gravity.CENTER).setViewProtection(
+                            WatchFaceStyle.PROTECT_STATUS_BAR |
+                                    WatchFaceStyle.PROTECT_HOTWORD_INDICATOR)
                     .setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT).build());
             setTouchEventsEnabled(false);
 
@@ -148,8 +200,10 @@ public class WearFace extends CanvasWatchFaceService {
 
                 // Update time zone in case it changed while we weren't visible.
                 mClock.setTimezone(TimeZone.getDefault());
+                connectLocationService();
             } else {
                 unregisterTimeZoneReceiver();
+                disconnectLocationService();
             }
 
             // Whether the timer should be running depends on whether we're visible and
@@ -174,8 +228,33 @@ public class WearFace extends CanvasWatchFaceService {
             if (!mRegisteredTimeZoneReceiver) {
                 return;
             }
+
             mRegisteredTimeZoneReceiver = false;
             unregisterReceiver(mTimeZoneReceiver);
+        }
+
+        private void connectLocationService() {
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
+            }
+        }
+
+        private void requestLocationUpdate() {
+            LocationRequest locationRequest =
+                    LocationRequest.create().setPriority(LocationRequest.PRIORITY_NO_POWER)
+                            .setNumUpdates(1);
+
+            LocationServices.FusedLocationApi
+                    .requestLocationUpdates(mGoogleApiClient, locationRequest, mLocationCallback);
+
+        }
+
+        private void disconnectLocationService() {
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                LocationServices.FusedLocationApi
+                        .removeLocationUpdates(mGoogleApiClient, mLocationCallback);
+                mGoogleApiClient.disconnect();
+            }
         }
     }
 }

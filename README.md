@@ -1,19 +1,24 @@
-24h Analog Clock Widget
-=======================
+24h Analog Clock Widget and Android Wear Face
+=============================================
 
-This is a homescreen widget that displays a 12-at-the-top 24 hour analog clock.
-Noon is at the top, so that the hour hand mimics the path of the sun.
+This is a homescreen widget and Android Wear watch face that displays a 12-at-the-top 24 hour analog
+clock. Noon is at the top, so that the hour hand mimics the path of the sun.
 
-![screenshot of widget](extra/sshot02.jpg)
+![screenshot of widget](extra/sshot02.png)
+
+![screenshot of Android Wear face](extra/virtual_screenshot-320.png)
 
 In addition to the time, it will display when the sun rises/sets for your
 current location on the dial.
+
+If you like, you can easily install [The homescreen widget][play] or [The Android Wear
+face][playwear] from Google Play.
 
 Permissions
 -----------
 
 The sunrise/sunset feature uses the location permission. This will not impact
-battery life as it never actively requests location - it only uses cached
+battery life as it never actively requests location — it only uses cached
 locations acquired by other apps.
 
 Source
@@ -31,7 +36,7 @@ License
 -------
 
 24h Analog Clock Widget  
-Copyright (C) 2011-2013 [Steve Pomeroy](mailto:steve@staticfree.info)
+Copyright (C) 2011-2014 [Steve Pomeroy](mailto:steve@staticfree.info)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,3 +50,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+[play]: https://play.google.com/store/apps/details?id=info.staticfree.android.twentyfourhour
+[playwear]: https://play.google.com/store/apps/details?id=info.staticfree.android.twentyfourhour.wear

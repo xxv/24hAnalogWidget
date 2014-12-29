@@ -182,21 +182,26 @@ public class WearFace extends CanvasWatchFaceService {
 
         @Override
         public void onPropertiesChanged(final Bundle properties) {
+            super.onPropertiesChanged(properties);
             /* get device features (burn-in, low-bit ambient) */
         }
 
         @Override
         public void onTimeTick() {
+            super.onTimeTick();
             invalidate();
         }
 
         @Override
         public void onAmbientModeChanged(final boolean inAmbientMode) {
-            /* the wearable switched between modes */
+            super.onAmbientModeChanged(isInAmbientMode());
+            invalidate();
+            updateTimer();
         }
 
         @Override
         public void onDraw(final Canvas canvas, final Rect bounds) {
+            super.onDraw(canvas, bounds);
             mClock.setTime(System.currentTimeMillis());
 
             if (mViewSizeInvalid) {

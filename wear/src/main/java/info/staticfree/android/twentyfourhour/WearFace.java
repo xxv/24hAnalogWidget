@@ -16,6 +16,7 @@ import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
+import android.view.WindowInsets;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -73,6 +74,7 @@ public class WearFace extends CanvasWatchFaceService {
                 setLocation(location);
             }
         };
+        private boolean mIsRound;
 
         private void setLocation(@Nullable final Location location) {
             mSunPositionOverlay.setLocation(location);
@@ -138,16 +140,13 @@ public class WearFace extends CanvasWatchFaceService {
             mSunPositionOverlay.setShadeAlpha(60);
             mClock.addDialOverlay(mSunPositionOverlay);
 
-            final DateOverlay dateOverlay = new DateOverlay(30, -30);
+            final DateOverlay dateOverlay = new DateOverlay(0.1875f, -0.1875f, 0.0625f);
             mClock.addDialOverlay(dateOverlay);
-            mClock.setHandsOverlay(
-                    new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand,
-                            R.drawable.round_minute_hand));
-            mClock.setFace(R.drawable.round_clock_face);
         }
 
         @Override
         public void onCreate(final SurfaceHolder holder) {
+            super.onCreate(holder);
             initializeClock();
 
                /* configure the system UI */
@@ -160,8 +159,25 @@ public class WearFace extends CanvasWatchFaceService {
                                     WatchFaceStyle.PROTECT_HOTWORD_INDICATOR)
                     .setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT).build());
             setTouchEventsEnabled(false);
+        }
 
-            updateTimer();
+        @Override
+        public void onApplyWindowInsets(final WindowInsets insets) {
+            super.onApplyWindowInsets(insets);
+            mIsRound = insets.isRound();
+
+            if (mIsRound) {
+                mClock.setHandsOverlay(
+                        new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand,
+                                R.drawable.round_minute_hand));
+                mClock.setFace(R.drawable.round_clock_face);
+            } else {
+                mClock.setHandsOverlay(
+                        new HandsOverlay(getApplicationContext(), R.drawable.square_hour_hand,
+                                R.drawable.square_minute_hand));
+                mClock.setFace(R.drawable.square_clock_face);
+            }
+            invalidate();
         }
 
         @Override

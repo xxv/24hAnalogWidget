@@ -33,9 +33,7 @@ package info.staticfree.android.twentyfourhour;
  */
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -285,20 +283,4 @@ public class Analog24HClock extends View {
     public void removeDialOverlay(DialOverlay dialOverlay) {
         mDialOverlay.remove(dialOverlay);
     }
-
-    private final BroadcastReceiver mClockChangeReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            // borrowed from AnalogClock.java
-            if (Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
-                final String tz = intent.getStringExtra("time-zone");
-                mCalendar = Calendar.getInstance(TimeZone.getTimeZone(tz));
-            }
-
-            invalidate();
-        }
-
-    };
 }

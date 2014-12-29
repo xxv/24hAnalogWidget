@@ -17,31 +17,30 @@ public class DateOverlay implements DialOverlay {
     private final float mOffsetY;
     private final float mOffsetX;
     private static final float RECT_RATIO = 1.61828f;
-    private static final float TEXT_SIZE = 20;
-    private RectF tomorrowRect = new RectF();
-    private RectF todayRect = new RectF();
-    private Paint mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mTomorrowBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mTomorrowTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mMonthTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Calendar mTomorrow = Calendar.getInstance();
+    private final RectF tomorrowRect = new RectF();
+    private final RectF todayRect = new RectF();
+    private final Paint mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mTomorrowBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mTomorrowTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mMonthTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Calendar mTomorrow = Calendar.getInstance();
+    private final float mTextSizeScale;
 
     /**
-     * @param offsetX the x offset, in pixels, from the center.
-     * @param offsetY the y offset, in pixels, from the center.
+     * @param offsetX the x offset, as a value between 0.0 and 1.0, from the center.
+     * @param offsetY the y offset, as a value between 0.0 and 1.0, from the center.
      */
-    public DateOverlay(final float offsetX, final float offsetY) {
+    public DateOverlay(final float offsetX, final float offsetY, final float textSizeScale) {
         mOffsetX = offsetX;
         mOffsetY = offsetY;
+        mTextSizeScale = textSizeScale;
         mBgPaint.setStyle(Paint.Style.FILL);
         mBgPaint.setColor(Color.argb(255, 80, 80, 80));
 
-        mTextPaint.setTextSize(TEXT_SIZE);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setColor(Color.argb(192, 255, 255, 255));
 
-        mTomorrowTextPaint.setTextSize(TEXT_SIZE);
         mTomorrowTextPaint.setTextAlign(Paint.Align.CENTER);
         mTomorrowTextPaint.setColor(Color.argb(96, 255, 255, 255));
 
@@ -49,20 +48,26 @@ public class DateOverlay implements DialOverlay {
         mTomorrowBgPaint.setColor(Color.argb(40, 255, 255, 255));
 
         mMonthTextPaint.setTextAlign(Paint.Align.LEFT);
-        mMonthTextPaint.setTextSize(TEXT_SIZE * 0.6f);
         mMonthTextPaint.setColor(Color.argb(127, 255, 255, 255));
     }
 
     @Override
-    public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
-                       boolean sizeChanged) {
-        todayRect.set(cX + mOffsetX, cY + mOffsetY, cX + mOffsetX + TEXT_SIZE * RECT_RATIO,
-                cX + mOffsetY + TEXT_SIZE);
+    public void onDraw(final Canvas canvas, final int cX, final int cY, final int w, final int h,
+                       final Calendar calendar, final boolean sizeChanged) {
+        final float offsetX = w / 2 * mOffsetX;
+        final float offsetY = h / 2 * mOffsetY;
+        final float textSize = mTextSizeScale * w;
+
+        mTextPaint.setTextSize(textSize);
+        mTomorrowTextPaint.setTextSize(textSize);
+        mMonthTextPaint.setTextSize(textSize * 0.6f);
+        todayRect.set(cX + offsetX, cY + offsetY, cX + offsetX + textSize * RECT_RATIO,
+                cX + offsetY + textSize);
         // Tomorrow
         mTomorrow.setTime(calendar.getTime());
         mTomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
-        boolean showNextMonth = mTomorrow.get(Calendar.MONTH) != calendar.get(Calendar.MONTH);
+        final boolean showNextMonth = mTomorrow.get(Calendar.MONTH) != calendar.get(Calendar.MONTH);
 
         // Under-draw tomorrow
         if (showNextMonth) {
@@ -86,7 +91,6 @@ public class DateOverlay implements DialOverlay {
                     when.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()),
                     bg.left + bg.width() * 0.05f, bg.top, mMonthTextPaint);
         }
-
     }
 
     /**

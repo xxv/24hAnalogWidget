@@ -10,8 +10,8 @@
     <info.staticfree.android.twentyfourhour.Analog24HClock
         android:id="@+id/face"
         android:layout_width="match_parent"
-        app:face="@drawable/round_clock_face"
-        app:hour_hand="@drawable/round_hour_hand"
-        app:minute_hand="@drawable/round_minute_hand"
+        app:face="@drawable/square_clock_face"
+        app:hour_hand="@drawable/square_hour_hand"
+        app:minute_hand="@drawable/square_minute_hand"
         android:layout_height="match_parent" />
 </FrameLayout>

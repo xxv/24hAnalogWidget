@@ -123,8 +123,11 @@ public class Analog24HClock extends View {
 
     public void setFace(Drawable face) {
         mFace = face;
+        mSizeChanged = true;
         mDialHeight = mFace.getIntrinsicHeight();
         mDialWidth = mFace.getIntrinsicWidth();
+
+        invalidate();
     }
 
     /**
@@ -282,5 +285,9 @@ public class Analog24HClock extends View {
 
     public void removeDialOverlay(DialOverlay dialOverlay) {
         mDialOverlay.remove(dialOverlay);
+    }
+
+    public void clearDialOverlays() {
+        mDialOverlay.clear();
     }
 }

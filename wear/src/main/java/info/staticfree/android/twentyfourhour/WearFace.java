@@ -136,6 +136,7 @@ public class WearFace extends CanvasWatchFaceService {
         }
 
         private void initializeClock() {
+            mClock.clearDialOverlays();
             mSunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
             mSunPositionOverlay.setShadeAlpha(60);
             mClock.addDialOverlay(mSunPositionOverlay);
@@ -177,6 +178,7 @@ public class WearFace extends CanvasWatchFaceService {
                                 R.drawable.square_minute_hand));
                 mClock.setFace(R.drawable.square_clock_face);
             }
+
             invalidate();
         }
 
@@ -194,7 +196,16 @@ public class WearFace extends CanvasWatchFaceService {
 
         @Override
         public void onAmbientModeChanged(final boolean inAmbientMode) {
-            super.onAmbientModeChanged(isInAmbientMode());
+            super.onAmbientModeChanged(inAmbientMode);
+
+            if (mIsRound) {
+                mClock.setFace(inAmbientMode ? R.drawable.round_clock_face_ambient :
+                        R.drawable.round_clock_face);
+            } else {
+                mClock.setFace(inAmbientMode ? R.drawable.square_clock_face_ambient :
+                        R.drawable.square_clock_face);
+            }
+
             invalidate();
             updateTimer();
         }

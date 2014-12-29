@@ -41,6 +41,7 @@ public class WearFaceDemoActivity extends Activity {
     }
 
     private void initializeClock() {
+        mClock.clearDialOverlays();
         mSunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
         mSunPositionOverlay.setShadeAlpha(60);
         mClock.addDialOverlay(mSunPositionOverlay);

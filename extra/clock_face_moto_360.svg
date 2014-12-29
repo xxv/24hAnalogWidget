@@ -37,9 +37,9 @@
      fit-margin-right="1"
      fit-margin-bottom="1"
      inkscape:zoom="0.5"
-     inkscape:cx="482.57572"
-     inkscape:cy="554.8995"
-     inkscape:current-layer="layer25"
+     inkscape:cx="573.57572"
+     inkscape:cy="562.8995"
+     inkscape:current-layer="layer15"
      inkscape:window-x="0"
      inkscape:window-y="19"
      inkscape:window-maximized="0"
@@ -597,7 +597,7 @@
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date>2007-01-28</dc:date>
         <dc:creator>
           <cc:Agent>
@@ -2996,13 +2996,12 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
      inkscape:groupmode="layer"
      id="layer15"
      inkscape:label="Sun overlay"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <path
        sodipodi:end="3.0241688"
        sodipodi:start="0.15442274"
        sodipodi:type="arc"
-       style="color:#000000;fill:#000000;fill-opacity:0.31372549;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.28997684000000001;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path4288"
        sodipodi:cx="531.65631"
        sodipodi:cy="560"
@@ -3018,7 +3017,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        sodipodi:cy="560"
        sodipodi:cx="531.65631"
        id="path4290"
-       style="color:#000000;fill:#000000;fill-opacity:0.31372549;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.28997684000000001;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        sodipodi:type="arc"
        sodipodi:start="0.3094751"
        sodipodi:end="2.8465278" />
@@ -3026,7 +3025,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        sodipodi:end="2.6730722"
        sodipodi:start="0.47293957"
        sodipodi:type="arc"
-       style="color:#000000;fill:#000000;fill-opacity:0.31372549;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.28997684000000001;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path4292"
        sodipodi:cx="531.65631"
        sodipodi:cy="560"
@@ -3042,7 +3041,7 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        sodipodi:cy="560"
        sodipodi:cx="531.65631"
        id="path3518"
-       style="color:#000000;fill:#000000;fill-opacity:0.31372549;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.28997684000000001;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        sodipodi:type="arc"
        sodipodi:start="0"
        sodipodi:end="3.1415927" />

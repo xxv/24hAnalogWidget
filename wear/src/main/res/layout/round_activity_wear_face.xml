@@ -11,7 +11,6 @@
         android:id="@+id/face"
         app:face="@drawable/round_clock_face"
         app:hour_hand="@drawable/round_hour_hand"
-        app:minute_hand="@drawable/round_minute_hand"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

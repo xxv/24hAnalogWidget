@@ -106,14 +106,14 @@ public class Analog24HClock extends View {
             hourHand = context.getResources().getDrawable(R.drawable.hour_hand);
         }
 
-        Drawable minuteHand = attrs.getDrawable(R.styleable.Analog24HClock_minute_hand);
-        if (minuteHand == null) {
-            minuteHand = context.getResources().getDrawable(R.drawable.minute_hand);
-        }
+        //Drawable minuteHand = attrs.getDrawable(R.styleable.Analog24HClock_minute_hand);
+        //if (minuteHand == null) {
+        //    minuteHand = context.getResources().getDrawable(R.drawable.minute_hand);
+        //}
 
         mCalendar = Calendar.getInstance();
 
-        mHandsOverlay = new HandsOverlay(hourHand, minuteHand);
+        mHandsOverlay = new HandsOverlay(hourHand);//, minuteHand);
     }
 
     public void setFace(int drawableRes) {

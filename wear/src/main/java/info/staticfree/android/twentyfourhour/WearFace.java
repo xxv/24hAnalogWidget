@@ -169,13 +169,13 @@ public class WearFace extends CanvasWatchFaceService {
 
             if (mIsRound) {
                 mClock.setHandsOverlay(
-                        new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand,
-                                R.drawable.round_minute_hand));
+                        new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand)); //,
+                                //R.drawable.round_minute_hand));
                 mClock.setFace(R.drawable.round_clock_face);
             } else {
                 mClock.setHandsOverlay(
-                        new HandsOverlay(getApplicationContext(), R.drawable.square_hour_hand,
-                                R.drawable.square_minute_hand));
+                        new HandsOverlay(getApplicationContext(), R.drawable.square_hour_hand)); //,
+                                //R.drawable.square_minute_hand));
                 mClock.setFace(R.drawable.square_clock_face);
             }
 

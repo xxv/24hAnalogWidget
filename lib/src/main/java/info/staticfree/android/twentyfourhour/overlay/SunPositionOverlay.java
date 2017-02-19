@@ -62,29 +62,19 @@ public class SunPositionOverlay implements DialOverlay {
     private static final Paint OVERLAY_NO_INFO_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private static final Paint OVERLAY_SUN = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private static final Paint OVERLAY_NIGHT = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private static final Paint OVERLAY_CIVIL = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private static final Paint OVERLAY_NAUTICAL = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private static final Paint OVERLAY_ASTRO = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private static final Paint OVERLAY_SUNSET = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     static {
         OVERLAY_SUN.setARGB(127, 255, 201, 14); // Orange for Sun
         OVERLAY_SUN.setStyle(Paint.Style.FILL);
 
-        OVERLAY_NIGHT.setARGB(20, 0, 0, 0); // Sunrise/Sunset
-        OVERLAY_NIGHT.setStyle(Paint.Style.FILL);
-
-        OVERLAY_CIVIL.setARGB(20, 0, 0, 0); // Civil Twilight
-        OVERLAY_CIVIL.setStyle(Paint.Style.FILL);
-
-        OVERLAY_NAUTICAL.setARGB(20, 0, 0, 0); // Nautical Twilight
-        OVERLAY_NAUTICAL.setStyle(Paint.Style.FILL);
-
-        OVERLAY_ASTRO.setARGB(20, 0, 0, 0); // Astronomical Twilight
-        OVERLAY_ASTRO.setStyle(Paint.Style.FILL);
+        OVERLAY_SUNSET.setARGB(20, 0, 0, 0); // Sunrise/Sunset
+        OVERLAY_SUNSET.setStyle(Paint.Style.FILL);
     }
 
     private float scale = 0.5f;
+    private boolean showTwilight = true;
+    private boolean showHighNoon = true;
 
     public SunPositionOverlay(@NonNull Context context) {
         OVERLAY_NO_INFO_PAINT.setShader(new BitmapShader(BitmapFactory
@@ -97,10 +87,15 @@ public class SunPositionOverlay implements DialOverlay {
     }
 
     public void setShadeAlpha(int alpha) {
-        OVERLAY_ASTRO.setAlpha(alpha);
-        OVERLAY_CIVIL.setAlpha(alpha);
-        OVERLAY_NAUTICAL.setAlpha(alpha);
-        OVERLAY_NIGHT.setAlpha(alpha);
+        OVERLAY_SUNSET.setAlpha(alpha);
+    }
+
+    public void setShowTwilight(boolean showTwilight) {
+        this.showTwilight = showTwilight;
+    }
+
+    public void setShowHighNoon(boolean showHighNoon) {
+        this.showHighNoon = showHighNoon;
     }
 
     public void setLocation(@Nullable Location location) {
@@ -122,8 +117,8 @@ public class SunPositionOverlay implements DialOverlay {
     }
 
     @Override
-    public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
-            boolean sizeChanged) {
+    public void onDraw(@NonNull Canvas canvas, int cX, int cY, int w, int h,
+            @NonNull Calendar calendar, boolean sizeChanged) {
         int insetW = (int) (w / 2.0f * scale);
         int insetH = (int) (h / 2.0f * scale);
         inset.set(cX - insetW, cY - insetH, cX + insetW, cY + insetH);
@@ -148,24 +143,28 @@ public class SunPositionOverlay implements DialOverlay {
                     ((DEGREE_CIRCLE + (eveningSunAngle - morningSunAngle)) % DEGREE_CIRCLE) / 2) %
                     DEGREE_CIRCLE;
 
-            drawInsetArc(canvas, eveningSunAngle, morningSunAngle, OVERLAY_ASTRO);
+            drawInsetArc(canvas, eveningSunAngle, morningSunAngle, OVERLAY_SUNSET);
 
-            drawInsetArc(canvas,
-                    getHourArcAngle(eveningCivilTwilightTime(calendar, latLon, tz, dst)),
-                    getHourArcAngle(morningCivilTwilightTime(calendar, latLon, tz, dst)),
-                    OVERLAY_CIVIL);
-            drawInsetArc(canvas,
-                    getHourArcAngle(eveningNauticalTwilightTime(calendar, latLon, tz, dst)),
-                    getHourArcAngle(morningNauticalTwilightTime(calendar, latLon, tz, dst)),
-                    OVERLAY_NAUTICAL);
-            drawInsetArc(canvas,
-                    getHourArcAngle(eveningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
-                    getHourArcAngle(morningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
-                    OVERLAY_ASTRO);
+            if (showTwilight) {
+                drawInsetArc(canvas,
+                        getHourArcAngle(eveningCivilTwilightTime(calendar, latLon, tz, dst)),
+                        getHourArcAngle(morningCivilTwilightTime(calendar, latLon, tz, dst)),
+                        OVERLAY_SUNSET);
+                drawInsetArc(canvas,
+                        getHourArcAngle(eveningNauticalTwilightTime(calendar, latLon, tz, dst)),
+                        getHourArcAngle(morningNauticalTwilightTime(calendar, latLon, tz, dst)),
+                        OVERLAY_SUNSET);
+                drawInsetArc(canvas,
+                        getHourArcAngle(eveningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
+                        getHourArcAngle(morningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
+                        OVERLAY_SUNSET);
+            }
 
-            if (Math.abs(eveningSunAngle - morningSunAngle) > 0) {
-                canvas.drawArc(inset, highNoon - HIGH_NOON_ARC_ANGLE / 2, HIGH_NOON_ARC_ANGLE, true,
-                        OVERLAY_SUN);
+            if (showHighNoon) {
+                if (Math.abs(eveningSunAngle - morningSunAngle) > 0) {
+                    canvas.drawArc(inset, highNoon - HIGH_NOON_ARC_ANGLE / 2, HIGH_NOON_ARC_ANGLE,
+                            true, OVERLAY_SUN);
+                }
             }
 
             // this can happen when lat/lon and the timezone are out of sync, causing impossible

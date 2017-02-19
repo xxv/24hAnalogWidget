@@ -44,6 +44,8 @@ public class WearFace extends CanvasWatchFaceService {
      * This is scaled based on the background design.
      */
     public static final float SUN_POSITION_OVERLAY_SCALE = 0.61345f;
+    private static final float DATE_OVERLAY_OFFSET_X = 0.1875f;
+    private static final float DATE_OVERLAY_TEXT_SIZE_SCALE = 0.0625f;
     public static final String PREFS_USER_WANTS_LOCATION = "location_enabled";
     private static final String TAG = WearFace.class.getSimpleName();
 
@@ -82,11 +84,22 @@ public class WearFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
         private static final int MSG_UPDATE_TIME = 100;
         private static final long INTERACTIVE_UPDATE_RATE_MS = 1000;
+        private static final int SHADE_ALPHA = 60;
 
         private final Analog24HClock clock = new Analog24HClock(WearFace.this);
         private boolean registeredTimeZoneReceiver;
         private boolean viewSizeInvalid = true;
+        private boolean isRound;
+
         private final SunPositionOverlay sunPositionOverlay = new SunPositionOverlay(WearFace.this);
+        private final DateOverlay dateOverlay =
+                new DateOverlay(DATE_OVERLAY_OFFSET_X, -DATE_OVERLAY_OFFSET_X,
+                        DATE_OVERLAY_TEXT_SIZE_SCALE);
+
+        Engine() {
+            sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
+            sunPositionOverlay.setShadeAlpha(SHADE_ALPHA);
+        }
 
         private final GoogleApiClient.ConnectionCallbacks connectionCallbacks =
                 new GoogleApiClient.ConnectionCallbacks() {
@@ -102,7 +115,6 @@ public class WearFace extends CanvasWatchFaceService {
 
                     @Override
                     public void onConnectionSuspended(int i) {
-
                     }
                 };
 
@@ -112,10 +124,8 @@ public class WearFace extends CanvasWatchFaceService {
                 setLocation(location);
             }
         };
-        private boolean mIsRound;
 
         private void setLocation(@Nullable Location location) {
-            Log.d(TAG, "Set location " + location);
             sunPositionOverlay.setLocation(location);
             invalidate();
         }
@@ -125,7 +135,7 @@ public class WearFace extends CanvasWatchFaceService {
 
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.d(TAG, "Error connecting to Google Play Services");
+                        Log.d(TAG, "Error connecting to Google Play Services: " + connectionResult);
                     }
                 };
 
@@ -153,7 +163,7 @@ public class WearFace extends CanvasWatchFaceService {
         };
 
         /* receiver to update the time zone */
-        final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
+        final BroadcastReceiver timeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.hasExtra("time-zone")) {
@@ -174,20 +184,16 @@ public class WearFace extends CanvasWatchFaceService {
             return isVisible() && !isInAmbientMode();
         }
 
-        private void initializeClock() {
+        private void initializeOverlays() {
             clock.clearDialOverlays();
-            sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
-            sunPositionOverlay.setShadeAlpha(60);
             clock.addDialOverlay(sunPositionOverlay);
-
-            DateOverlay dateOverlay = new DateOverlay(0.1875f, -0.1875f, 0.0625f);
             clock.addDialOverlay(dateOverlay);
         }
 
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
-            initializeClock();
+            initializeOverlays();
 
                /* configure the system UI */
             setWatchFaceStyle(new WatchFaceStyle.Builder(WearFace.this).setAcceptsTapEvents(false)
@@ -202,9 +208,9 @@ public class WearFace extends CanvasWatchFaceService {
         @Override
         public void onApplyWindowInsets(WindowInsets insets) {
             super.onApplyWindowInsets(insets);
-            mIsRound = insets.isRound();
+            isRound = insets.isRound();
 
-            if (mIsRound) {
+            if (isRound) {
                 clock.setHandsOverlay(
                         new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand,
                                 R.drawable.round_minute_hand));
@@ -237,12 +243,23 @@ public class WearFace extends CanvasWatchFaceService {
         public void onAmbientModeChanged(boolean inAmbientMode) {
             super.onAmbientModeChanged(inAmbientMode);
 
-            if (mIsRound) {
+            if (isRound) {
                 clock.setFace(inAmbientMode ? R.drawable.round_clock_face_ambient :
                         R.drawable.round_clock_face);
             } else {
                 clock.setFace(inAmbientMode ? R.drawable.square_clock_face_ambient :
                         R.drawable.square_clock_face);
+            }
+
+            sunPositionOverlay.setShowHighNoon(!inAmbientMode);
+            sunPositionOverlay.setShowTwilight(!inAmbientMode);
+
+            if (inAmbientMode) {
+                clock.removeDialOverlay(dateOverlay);
+                sunPositionOverlay.setShadeAlpha(255);
+            } else {
+                clock.addDialOverlay(dateOverlay);
+                sunPositionOverlay.setShadeAlpha(SHADE_ALPHA);
             }
 
             invalidate();
@@ -292,7 +309,7 @@ public class WearFace extends CanvasWatchFaceService {
             filter.addAction(Intent.ACTION_TIME_CHANGED);
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 
-            registerReceiver(mTimeZoneReceiver, filter);
+            registerReceiver(timeZoneReceiver, filter);
             registeredTimeZoneReceiver = true;
         }
 
@@ -302,7 +319,7 @@ public class WearFace extends CanvasWatchFaceService {
             }
 
             registeredTimeZoneReceiver = false;
-            unregisterReceiver(mTimeZoneReceiver);
+            unregisterReceiver(timeZoneReceiver);
         }
 
         private void connectLocationService() {
@@ -313,7 +330,6 @@ public class WearFace extends CanvasWatchFaceService {
 
         @SuppressWarnings("MissingPermission")
         private void requestLocationUpdate() {
-            Log.d(TAG, "requesting location updates...");
             LocationRequest locationRequest =
                     LocationRequest.create().setPriority(LocationRequest.PRIORITY_LOW_POWER)
                             .setNumUpdates(1);

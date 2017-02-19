@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.Calendar;
 
@@ -20,13 +21,13 @@ public class HandsOverlay implements DialOverlay {
     private final boolean mUseLargeFace;
 
     public HandsOverlay(Context context, boolean useLargeFace) {
-        final Resources r = context.getResources();
+        Resources r = context.getResources();
 
         mUseLargeFace = useLargeFace;
 
         mHour = r.getDrawable(mUseLargeFace ? R.drawable.hour_hand_large : R.drawable.hour_hand);
-        mMinute = r.getDrawable(mUseLargeFace ? R.drawable.minute_hand_large
-                : R.drawable.minute_hand);
+        mMinute = r.getDrawable(
+                mUseLargeFace ? R.drawable.minute_hand_large : R.drawable.minute_hand);
     }
 
     public HandsOverlay(Drawable hourHand, Drawable minuteHand) {
@@ -37,7 +38,7 @@ public class HandsOverlay implements DialOverlay {
     }
 
     public HandsOverlay(Context context, int hourHandRes, int minuteHandRes) {
-        final Resources r = context.getResources();
+        Resources r = context.getResources();
 
         mUseLargeFace = false;
 
@@ -46,8 +47,8 @@ public class HandsOverlay implements DialOverlay {
     }
 
     @Override
-    public void onDraw(Canvas canvas, int cX, int cY, int w, int h, Calendar calendar,
-                       boolean sizeChanged) {
+    public void onDraw(@NonNull Canvas canvas, int cX, int cY, int w, int h,
+            @NonNull Calendar calendar, boolean sizeChanged) {
 
         updateHands(calendar);
 
@@ -80,9 +81,9 @@ public class HandsOverlay implements DialOverlay {
 
     private void updateHands(Calendar calendar) {
 
-        final int h = calendar.get(Calendar.HOUR_OF_DAY);
-        final int m = calendar.get(Calendar.MINUTE);
-        final int s = calendar.get(Calendar.SECOND);
+        int h = calendar.get(Calendar.HOUR_OF_DAY);
+        int m = calendar.get(Calendar.MINUTE);
+        int s = calendar.get(Calendar.SECOND);
 
         mHourRot = getHourHandAngle(h, m);
         mMinRot = (m / 60.0f) * 360 + (mShowSeconds ? ((s / 60.0f) * 360 / 60.0f) : 0);
@@ -91,5 +92,4 @@ public class HandsOverlay implements DialOverlay {
     public static float getHourHandAngle(int h, int m) {
         return ((12 + h) / 24.0f * 360) % 360 + (m / 60.0f) * 360 / 24.0f;
     }
-
 }

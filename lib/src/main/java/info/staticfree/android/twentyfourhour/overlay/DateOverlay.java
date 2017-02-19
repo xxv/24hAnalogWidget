@@ -4,16 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * An overlay that shows the date. Above the numeric date is the current month abbreviation.
- * When tomorrow is a new month, this shows that too.
+ * An overlay that shows the date. Above the numeric date is the current month abbreviation. When
+ * tomorrow is a new month, this shows that too.
  */
 public class DateOverlay implements DialOverlay {
-    public static final float ROUNDED_RECT_RADIUS = 2f;
+    private static final float ROUNDED_RECT_RADIUS = 2f;
     private final float mOffsetY;
     private final float mOffsetX;
     private static final float RECT_RATIO = 1.61828f;
@@ -31,7 +32,7 @@ public class DateOverlay implements DialOverlay {
      * @param offsetX the x offset, as a value between 0.0 and 1.0, from the center.
      * @param offsetY the y offset, as a value between 0.0 and 1.0, from the center.
      */
-    public DateOverlay(final float offsetX, final float offsetY, final float textSizeScale) {
+    public DateOverlay(float offsetX, float offsetY, float textSizeScale) {
         mOffsetX = offsetX;
         mOffsetY = offsetY;
         mTextSizeScale = textSizeScale;
@@ -52,11 +53,11 @@ public class DateOverlay implements DialOverlay {
     }
 
     @Override
-    public void onDraw(final Canvas canvas, final int cX, final int cY, final int w, final int h,
-                       final Calendar calendar, final boolean sizeChanged) {
-        final float offsetX = w / 2 * mOffsetX;
-        final float offsetY = h / 2 * mOffsetY;
-        final float textSize = mTextSizeScale * w;
+    public void onDraw(@NonNull Canvas canvas, int cX, int cY, int w, int h,
+            @NonNull Calendar calendar, boolean sizeChanged) {
+        float offsetX = w / 2 * mOffsetX;
+        float offsetY = h / 2 * mOffsetY;
+        float textSize = mTextSizeScale * w;
 
         mTextPaint.setTextSize(textSize);
         mTomorrowTextPaint.setTextSize(textSize);
@@ -67,7 +68,7 @@ public class DateOverlay implements DialOverlay {
         mTomorrow.setTime(calendar.getTime());
         mTomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
-        final boolean showNextMonth = mTomorrow.get(Calendar.MONTH) != calendar.get(Calendar.MONTH);
+        boolean showNextMonth = mTomorrow.get(Calendar.MONTH) != calendar.get(Calendar.MONTH);
 
         // Under-draw tomorrow
         if (showNextMonth) {
@@ -81,8 +82,8 @@ public class DateOverlay implements DialOverlay {
         drawDay(canvas, calendar, todayRect, mBgPaint, mTextPaint, true);
     }
 
-    private void drawDay(final Canvas canvas, final Calendar when, final RectF bg,
-                         final Paint bgPaint, final Paint textPaint, final boolean showMonth) {
+    private void drawDay(Canvas canvas, Calendar when, RectF bg, Paint bgPaint, Paint textPaint,
+            boolean showMonth) {
         drawTextRectBg(canvas, String.valueOf(when.get(Calendar.DAY_OF_MONTH)), bg, bgPaint,
                 textPaint);
 
@@ -96,14 +97,14 @@ public class DateOverlay implements DialOverlay {
     /**
      * Draws the given text with a rounded rectangle background.
      *
-     * @param canvas    the canvas to draw on.
-     * @param text      the text to draw.
-     * @param bgSize    the size and position of the rectangle.
-     * @param bgPaint   the background color.
+     * @param canvas the canvas to draw on.
+     * @param text the text to draw.
+     * @param bgSize the size and position of the rectangle.
+     * @param bgPaint the background color.
      * @param textPaint the text color and style; the text size will be adjusted.
      */
-    private void drawTextRectBg(final Canvas canvas, final CharSequence text, final RectF bgSize,
-                                final Paint bgPaint, final Paint textPaint) {
+    private void drawTextRectBg(Canvas canvas, CharSequence text, RectF bgSize, Paint bgPaint,
+            Paint textPaint) {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawRoundRect(bgSize, ROUNDED_RECT_RADIUS, ROUNDED_RECT_RADIUS, bgPaint);
         textPaint.setTextSize(bgSize.height());

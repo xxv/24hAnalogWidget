@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="info.staticfree.android.twentyfourhour.wear">
+<manifest package="info.staticfree.android.twentyfourhour.wear"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-feature android:name="android.hardware.type.watch"/>
+    <uses-feature android:name="android.hardware.type.watch" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!--Watch face permissions. -->
-    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Watch face permissions. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Required for complications to receive complication data and open the provider chooser. -->
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
 
     <application
         android:allowBackup="true"
@@ -17,28 +19,38 @@
         android:label="@string/app_name">
         <service
             android:name="info.staticfree.android.twentyfourhour.WearFace"
-            android:label="@string/app_name"
             android:allowEmbedded="true"
-            android:taskAffinity=""
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:taskAffinity="">
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face"/>
+                android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/widget_preview"/>
+                android:resource="@drawable/widget_preview" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/widget_preview_circular"/>
+                android:resource="@drawable/widget_preview_circular" />
 
             <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService"/>
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE"/>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name="info.staticfree.android.twentyfourhour.PermissionRequestActivity"
+            android:label="@string/title_activity_permission_request" />
+
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-    </application>
+            android:value="@integer/google_play_services_version" />
 
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+    </application>
 </manifest>

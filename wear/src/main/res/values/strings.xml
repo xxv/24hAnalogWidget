@@ -2,5 +2,6 @@
 <resources>
 
     <string name="app_name">24h Analog</string>
+    <string name="title_activity_permission_request">Location Permission Request</string>
 
 </resources>

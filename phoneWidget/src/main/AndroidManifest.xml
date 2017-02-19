@@ -4,10 +4,6 @@
     android:versionCode="9"
     android:versionName="0.5.0" >
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="20" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WearFace"
+    tools:context="twentyfourhour.WearFaceDemoActivity"
     tools:deviceIds="wear_round">
 
     <info.staticfree.android.twentyfourhour.Analog24HClock
         android:id="@+id/face"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:face="@drawable/round_clock_face"
         app:hour_hand="@drawable/round_hour_hand"
-        app:minute_hand="@drawable/round_minute_hand"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:minute_hand="@drawable/round_minute_hand" />
 </RelativeLayout>

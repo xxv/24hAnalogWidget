@@ -96,11 +96,11 @@ public class WearFace extends CanvasWatchFaceService {
                 new DateOverlay(DATE_OVERLAY_OFFSET_X, -DATE_OVERLAY_OFFSET_X,
                         DATE_OVERLAY_TEXT_SIZE_SCALE);
         private final HandsOverlay handsOverlayAmbient =
-                new HandsOverlay(getApplicationContext(), R.drawable.hour_hand_ambient,
-                        R.drawable.minute_hand_ambient);
+                new HandsOverlay(getApplicationContext(), R.drawable.wear_hour_hand_ambient,
+                        R.drawable.wear_minute_hand_ambient);
         private final HandsOverlay handsOverlay =
-                new HandsOverlay(getApplicationContext(), R.drawable.hour_hand,
-                        R.drawable.minute_hand);
+                new HandsOverlay(getApplicationContext(), R.drawable.wear_hour_hand,
+                        R.drawable.wear_minute_hand);
 
         Engine() {
             sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);

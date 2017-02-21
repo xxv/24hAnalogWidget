@@ -12,6 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:face="@drawable/square_clock_face"
-        app:hour_hand="@drawable/square_hour_hand"
-        app:minute_hand="@drawable/square_minute_hand" />
+        app:hour_hand="@drawable/hour_hand"
+        app:minute_hand="@drawable/minute_hand" />
 </FrameLayout>

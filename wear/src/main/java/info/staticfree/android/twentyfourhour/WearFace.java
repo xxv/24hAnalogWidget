@@ -95,6 +95,12 @@ public class WearFace extends CanvasWatchFaceService {
         private final DateOverlay dateOverlay =
                 new DateOverlay(DATE_OVERLAY_OFFSET_X, -DATE_OVERLAY_OFFSET_X,
                         DATE_OVERLAY_TEXT_SIZE_SCALE);
+        private final HandsOverlay handsOverlayAmbient =
+                new HandsOverlay(getApplicationContext(), R.drawable.hour_hand_ambient,
+                        R.drawable.minute_hand_ambient);
+        private final HandsOverlay handsOverlay =
+                new HandsOverlay(getApplicationContext(), R.drawable.hour_hand,
+                        R.drawable.minute_hand);
 
         Engine() {
             sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
@@ -188,6 +194,8 @@ public class WearFace extends CanvasWatchFaceService {
             clock.clearDialOverlays();
             clock.addDialOverlay(sunPositionOverlay);
             clock.addDialOverlay(dateOverlay);
+            handsOverlay.setShowSeconds(true);
+            handsOverlayAmbient.setShowSeconds(true);
         }
 
         @Override
@@ -210,18 +218,8 @@ public class WearFace extends CanvasWatchFaceService {
             super.onApplyWindowInsets(insets);
             isRound = insets.isRound();
 
-            if (isRound) {
-                clock.setHandsOverlay(
-                        new HandsOverlay(getApplicationContext(), R.drawable.round_hour_hand,
-                                R.drawable.round_minute_hand));
-                clock.setFace(R.drawable.round_clock_face);
-            } else {
-                clock.setHandsOverlay(
-                        new HandsOverlay(getApplicationContext(), R.drawable.square_hour_hand,
-                                R.drawable.square_minute_hand));
-                clock.setFace(R.drawable.square_clock_face);
-            }
-
+            clock.setHandsOverlay(handsOverlay);
+            clock.setFace(isRound ? R.drawable.round_clock_face : R.drawable.square_clock_face);
             clock.setShowSeconds(true);
 
             invalidate();
@@ -250,6 +248,8 @@ public class WearFace extends CanvasWatchFaceService {
                 clock.setFace(inAmbientMode ? R.drawable.square_clock_face_ambient :
                         R.drawable.square_clock_face);
             }
+
+            clock.setHandsOverlay(inAmbientMode ? handsOverlayAmbient : handsOverlay);
 
             sunPositionOverlay.setShowHighNoon(!inAmbientMode);
             sunPositionOverlay.setShowTwilight(!inAmbientMode);

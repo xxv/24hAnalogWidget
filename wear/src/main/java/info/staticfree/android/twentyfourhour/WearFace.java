@@ -85,6 +85,7 @@ public class WearFace extends CanvasWatchFaceService {
         private static final int MSG_UPDATE_TIME = 100;
         private static final long INTERACTIVE_UPDATE_RATE_MS = 1000;
         private static final int SHADE_ALPHA = 60;
+        private static final int SHADE_ALPHA_AMBIENT = 255;
 
         private final Analog24HClock clock = new Analog24HClock(WearFace.this);
         private boolean registeredTimeZoneReceiver;
@@ -151,6 +152,7 @@ public class WearFace extends CanvasWatchFaceService {
                         .addApi(Wearable.API).addConnectionCallbacks(connectionCallbacks)
                         .addOnConnectionFailedListener(mConnectionFailedListener).build();
 
+        @SuppressWarnings("HandlerLeak")
         final Handler updateTimeHandler = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -256,7 +258,7 @@ public class WearFace extends CanvasWatchFaceService {
 
             if (inAmbientMode) {
                 clock.removeDialOverlay(dateOverlay);
-                sunPositionOverlay.setShadeAlpha(255);
+                sunPositionOverlay.setShadeAlpha(SHADE_ALPHA_AMBIENT);
             } else {
                 clock.addDialOverlay(dateOverlay);
                 sunPositionOverlay.setShadeAlpha(SHADE_ALPHA);

@@ -11,68 +11,66 @@ import java.util.Calendar;
 import info.staticfree.android.twentyfourhour.lib.R;
 
 public class HandsOverlay implements DialOverlay {
-
-    private final Drawable mHour;
-    private final Drawable mMinute;
+    private final Drawable hour;
+    private final Drawable minute;
 
     private float mHourRot;
     private float mMinRot;
     private boolean mShowSeconds;
-    private final boolean mUseLargeFace;
+    private final boolean useLargeFace;
 
     public HandsOverlay(Context context, boolean useLargeFace) {
         Resources r = context.getResources();
 
-        mUseLargeFace = useLargeFace;
+        this.useLargeFace = useLargeFace;
 
-        mHour = r.getDrawable(mUseLargeFace ? R.drawable.hour_hand_large : R.drawable.hour_hand);
-        mMinute = r.getDrawable(
-                mUseLargeFace ? R.drawable.minute_hand_large : R.drawable.minute_hand);
+        hour = r.getDrawable(this.useLargeFace ? R.drawable.hour_hand_large : R.drawable.hour_hand);
+        minute = r.getDrawable(
+                this.useLargeFace ? R.drawable.minute_hand_large : R.drawable.minute_hand);
     }
 
-    public HandsOverlay(Drawable hourHand, Drawable minuteHand) {
-        mUseLargeFace = false;
+    public HandsOverlay(@NonNull Drawable hourHand, @NonNull Drawable minuteHand) {
+        useLargeFace = false;
 
-        mHour = hourHand;
-        mMinute = minuteHand;
+        hour = hourHand;
+        minute = minuteHand;
     }
 
-    public HandsOverlay(Context context, int hourHandRes, int minuteHandRes) {
+    public HandsOverlay(@NonNull Context context, int hourHandRes, int minuteHandRes) {
         Resources r = context.getResources();
 
-        mUseLargeFace = false;
+        useLargeFace = false;
 
-        mHour = r.getDrawable(hourHandRes);
-        mMinute = r.getDrawable(minuteHandRes);
+        hour = r.getDrawable(hourHandRes);
+        minute = r.getDrawable(minuteHandRes);
     }
 
     @Override
-    public void onDraw(@NonNull Canvas canvas, int cX, int cY, int w, int h,
+    public void onDraw(@NonNull Canvas canvas, int cX, int cY, int width, int height,
             @NonNull Calendar calendar, boolean sizeChanged) {
 
         updateHands(calendar);
 
+        drawHand(canvas, minute, mMinRot, cX, cY, sizeChanged);
+        drawHand(canvas, hour, mHourRot, cX, cY, sizeChanged);
+    }
+
+    private void drawHand(@NonNull Canvas canvas, @NonNull Drawable hand, float angle, int cX,
+            int cY, boolean sizeChanged) {
         canvas.save();
-        canvas.rotate(mHourRot, cX, cY);
+        canvas.rotate(angle, cX, cY);
 
         if (sizeChanged) {
-            w = mHour.getIntrinsicWidth();
-            h = mHour.getIntrinsicHeight();
-            mHour.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
+            setDrawableBounds(hand, cX, cY);
         }
-        mHour.draw(canvas);
+        hand.draw(canvas);
         canvas.restore();
+    }
 
-        canvas.save();
-        canvas.rotate(mMinRot, cX, cY);
-
-        if (sizeChanged) {
-            w = mMinute.getIntrinsicWidth();
-            h = mMinute.getIntrinsicHeight();
-            mMinute.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
-        }
-        mMinute.draw(canvas);
-        canvas.restore();
+    private void setDrawableBounds(@NonNull Drawable drawable, int cX, int cY) {
+        int w = drawable.getIntrinsicWidth();
+        int h = drawable.getIntrinsicHeight();
+        drawable.setBounds(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
     }
 
     public void setShowSeconds(boolean showSeconds) {
@@ -80,7 +78,6 @@ public class HandsOverlay implements DialOverlay {
     }
 
     private void updateHands(Calendar calendar) {
-
         int h = calendar.get(Calendar.HOUR_OF_DAY);
         int m = calendar.get(Calendar.MINUTE);
         int s = calendar.get(Calendar.SECOND);

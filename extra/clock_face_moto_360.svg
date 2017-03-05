@@ -14,11 +14,11 @@
    width="1120"
    height="1120"
    id="svg15302"
-   inkscape:version="0.92.0 r15299"
+   inkscape:version="0.92.1 r15371"
    sodipodi:docname="clock_face_moto_360.svg"
-   inkscape:export-filename="/home/steve/p/24h_analog_clock/wear/src/main/res/drawable-nodpi/minute_hand.png"
-   inkscape:export-xdpi="27.43"
-   inkscape:export-ydpi="27.43">
+   inkscape:export-filename="/home/steve/p/24h_analog_clock/wear/src/main/res/drawable-sw186dp-nodpi/wear_hour_hand_ambient.png"
+   inkscape:export-xdpi="24"
+   inkscape:export-ydpi="24">
   <sodipodi:namedview
      pagecolor="#000000"
      bordercolor="#666666"
@@ -4923,9 +4923,15 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
          d="m 560,187.09375 c -1.13761,0 -2.28455,0.84353 -3.15625,2.53125 l -6.875,13.3125 c -0.9416,1.82307 -1.35677,4.24937 -1.28125,6.625 -0.007,0.10248 -0.0312,0.20828 -0.0312,0.3125 v 324.15625 c -10.00005,4.37619 -17,14.35457 -17,25.96875 0,11.61418 6.99995,21.59256 17,25.96875 v 59.59375 c 0,2.58398 2.07226,4.6875 4.65625,4.6875 h 13.375 c 2.58399,0 4.65625,-2.10352 4.65625,-4.6875 v -59.59375 c 10.00005,-4.37619 17,-14.35457 17,-25.96875 0,-11.61418 -6.99995,-21.59256 -17,-25.96875 V 209.875 c 0,-0.10422 -0.0246,-0.21002 -0.0312,-0.3125 0.0755,-2.37563 -0.33965,-4.80193 -1.28125,-6.625 l -6.875,-13.3125 c -0.8717,-1.68772 -2.01864,-2.53125 -3.15625,-2.53125 z"
          id="rect4695"
          inkscape:connector-curvature="0" />
+      <circle
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;enable-background:accumulate"
+         id="path4782"
+         cx="560"
+         cy="560"
+         r="4.5084114" />
     </g>
     <g
-       style="display:none"
+       style="display:inline"
        inkscape:groupmode="layer"
        id="g6194"
        inkscape:label="hour arrow ambient">
@@ -4934,6 +4940,12 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
          id="path6192"
          d="m 560,187.09375 c -1.13761,0 -2.28455,0.84353 -3.15625,2.53125 l -6.875,13.3125 c -0.9416,1.82307 -1.35677,4.24937 -1.28125,6.625 -0.007,0.10248 -0.0312,0.20828 -0.0312,0.3125 v 324.15625 c -10.00005,4.37619 -17,14.35457 -17,25.96875 0,11.61418 6.99995,21.59256 17,25.96875 v 59.59375 c 0,2.58398 2.07226,4.6875 4.65625,4.6875 h 13.375 c 2.58399,0 4.65625,-2.10352 4.65625,-4.6875 v -59.59375 c 10.00005,-4.37619 17,-14.35457 17,-25.96875 0,-11.61418 -6.99995,-21.59256 -17,-25.96875 V 209.875 c 0,-0.10422 -0.0246,-0.21002 -0.0312,-0.3125 0.0755,-2.37563 -0.33965,-4.80193 -1.28125,-6.625 l -6.875,-13.3125 c -0.8717,-1.68772 -2.01864,-2.53125 -3.15625,-2.53125 z"
          style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;filter:url(#filter4752);enable-background:accumulate" />
+      <circle
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;enable-background:accumulate"
+         id="path4782-67"
+         cx="560"
+         cy="560"
+         r="4.5084114" />
     </g>
     <g
        style="display:none"
@@ -4961,18 +4973,12 @@ Includes embedded Ecmascript to animate display with current time.</dc:descripti
        inkscape:groupmode="layer"
        id="layer5"
        inkscape:label="minute"
-       style="display:inline">
+       style="display:none">
       <path
          style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;filter:url(#filter4752-4-9);enable-background:accumulate"
          d="m 555.5,50.09375 c -3.79908,0 -6.84375,3.044672 -6.84375,6.84375 V 534 c -10.00716,4.37516 -17,14.37966 -17,26 0,11.62034 6.99284,21.62484 17,26 v 65.09375 c 0,3.79908 3.04467,6.875 6.84375,6.875 h 9 c 3.79908,0 6.84375,-3.07592 6.84375,-6.875 V 586 c 10.00716,-4.37516 17,-14.37966 17,-26 0,-11.62034 -6.99284,-21.62484 -17,-26 V 56.9375 c 0,-3.799078 -3.04467,-6.84375 -6.84375,-6.84375 z"
          id="rect4834"
          inkscape:connector-curvature="0" />
-      <circle
-         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;enable-background:accumulate"
-         id="path4782"
-         cx="560"
-         cy="560"
-         r="4.5084114" />
       <circle
          style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.28997684;marker:none;enable-background:accumulate"
          id="path4782-3"

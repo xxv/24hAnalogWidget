@@ -24,6 +24,6 @@ dependencies {
     compile 'com.google.android.support:wearable:2.0.0'
     compile 'com.google.android.gms:play-services-wearable:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
-    compile 'com.android.support:palette-v7:25.1.1'
+    compile 'com.android.support:palette-v7:25.2.0'
     compile project(':lib')
 }

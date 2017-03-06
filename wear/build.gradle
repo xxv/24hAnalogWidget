@@ -6,15 +6,18 @@ android {
 
     defaultConfig {
         applicationId "info.staticfree.android.twentyfourhour.wear"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 25
-        versionCode 4
+        versionCode 5
         versionName "1.2.0"
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix '.debug'
         }
     }
 }

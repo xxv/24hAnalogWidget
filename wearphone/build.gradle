@@ -8,7 +8,7 @@ android {
         applicationId "info.staticfree.android.twentyfourhour.wear"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 5
+        versionCode 6
         versionName "1.2.0"
     }
     buildTypes {
@@ -20,10 +20,13 @@ android {
             applicationIdSuffix '.debug'
         }
     }
+    productFlavors {
+        regular { }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
     compile 'com.google.android.gms:play-services-wearable:10.2.0'
+    wearApp project(':wear')
 }

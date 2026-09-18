@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="info.staticfree.android.twentyfourhour.wear"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.staticfree.android.twentyfourhour.wear">
 
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-feature
@@ -29,6 +29,7 @@
         <service
             android:name="info.staticfree.android.twentyfourhour.WearFace"
             android:allowEmbedded="true"
+            android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_WALLPAPER"
             android:taskAffinity="">
@@ -51,6 +52,7 @@
 
         <activity
             android:name="info.staticfree.android.twentyfourhour.PermissionRequestActivity"
+            android:exported="false"
             android:label="@string/title_activity_permission_request" />
 
         <meta-data

@@ -6,8 +6,9 @@ android {
 
     defaultConfig {
         applicationId "info.staticfree.android.twentyfourhour.wear"
-        minSdkVersion 23
-        targetSdkVersion 33
+        // Watch Face Format v1 requires Wear OS 4 (API 33)
+        minSdkVersion 33
+        targetSdkVersion 34
         versionCode 501
         versionName "1.2.0"
     }

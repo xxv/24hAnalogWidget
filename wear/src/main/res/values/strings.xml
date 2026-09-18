@@ -4,4 +4,9 @@
     <string name="app_name">24h Analog</string>
     <string name="title_activity_permission_request">Location Permission Request</string>
 
+    <string name="slot_daylight">Sunrise / sunset</string>
+    <string name="slot_civil_twilight">Civil twilight</string>
+    <string name="slot_nautical_twilight">Nautical twilight</string>
+    <string name="slot_astronomical_twilight">Astronomical twilight</string>
+
 </resources>

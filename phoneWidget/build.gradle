@@ -24,3 +24,5 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation project(':lib')
 }
+
+apply from: "$rootDir/gradle/signing.gradle"

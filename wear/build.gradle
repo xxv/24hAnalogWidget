@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+// Watch Face Format watch face: resources only, no code. The face is described by
+// src/main/res/raw/watchface.xml. Sun times come from the :sun app's complications.
 android {
     namespace 'info.staticfree.android.twentyfourhour.wear'
     compileSdkVersion 34
@@ -14,23 +16,9 @@ android {
     }
     buildTypes {
         release {
+            // With no code to keep, R8 strips the generated R classes, so the release APK has
+            // no classes.dex (Watch Face Format packages must be resource-only).
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-
         }
     }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.android.support:wearable:2.9.0'
-    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.wear:wear:1.3.0'
-    implementation project(':lib')
-    
-    compileOnly 'com.google.android.wearable:wearable:2.9.0'
 }

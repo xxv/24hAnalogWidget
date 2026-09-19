@@ -6,7 +6,8 @@ clock. Noon is at the top, so that the hour hand mimics the path of the sun.
 
 ![screenshot of widget](extra/sshot02.png)
 
-![screenshot of Android Wear face](extra/virtual_screenshot-320.png)
+![screenshot of the Wear OS watch face](extra/wear_face.png)
+![the same watch face in always-on mode](extra/wear_face_ambient.png)
 
 In addition to the time, it will display when the sun rises/sets for your
 current location on the dial.

@@ -6,4 +6,7 @@
     <string name="widget_name_3x">Analog clock, 24h 3x3</string>
     <string name="intro_text">This is a preview of the homescreen widget which displays a 12-at-the-top 24 hour analog clock. Noon is at the top so that the hour hand mimics the path of the sun.</string>
 
+    <string name="location_no_permission">Allow location access to shade the dial with today\'s sunrise, sunset and twilight.</string>
+    <string name="location_waiting">Waiting for a location…</string>
+    <string name="location_no_background">To keep the sunrise and sunset times right when you travel, allow location access all the time. Otherwise, open this app to update the location.</string>
 </resources>

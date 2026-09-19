@@ -5,4 +5,7 @@
     <string name="widget_name_2x">Horloge Analogique sur 24h, 2x2</string>
     <string name="widget_name_3x">Horloge Analogique sur 24h, 3x3</string>
     <string name="intro_text">Ceci est un apperçu de ce widget d\'écran d\'accueil qui montre une horloge analogique sur 24 heures. Midi est en haut, pour que l\'aiguille des heures suive la course du soleil.</string>
+    <string name="location_no_permission">Autorisez l\'accès à la position pour ombrer le cadran selon le lever, le coucher du soleil et le crépuscule.</string>
+    <string name="location_waiting">En attente de la position…</string>
+    <string name="location_no_background">Pour garder les heures du lever et du coucher du soleil à jour en voyage, autorisez l\'accès à la position en permanence. Sinon, ouvrez cette application pour mettre la position à jour.</string>
 </resources>

@@ -98,7 +98,11 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
         if (clock == null) {
             clock = new Analog24HClock(context);
             clock.setShowSeconds(false);
-            clock.addDialOverlay(new SunPositionOverlay(context));
+            final SunPositionOverlay sunOverlay = new SunPositionOverlay(context);
+            final WidgetLocation widgetLocation = new WidgetLocation(context);
+            widgetLocation.checkFromBackground();
+            sunOverlay.setLocation(widgetLocation.get());
+            clock.addDialOverlay(sunOverlay);
 
             final int s = (int) getSize(context);
             clock.onSizeChanged(s, s, 0, 0);
@@ -143,6 +147,18 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
         }
         if (shouldRecycle) {
             mCached.recycle();
+        }
+    }
+
+    /**
+     * Redraws all the clock widgets, for example after the location changes.
+     *
+     * @param context application context
+     */
+    public static void updateAll(Context context) {
+        for (Class<?> widget : new Class<?>[] {TwentyFourHourClockWidgetResizable.class,
+                TwentyFourHourClockWidget.class, TwentyFourHourClockWidget3x.class}) {
+            context.sendBroadcast(new Intent(ACTION_CLOCK_UPDATE).setClass(context, widget));
         }
     }
 

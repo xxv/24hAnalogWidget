@@ -6,7 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
+    <!-- No backup: the only stored data is the last location, which should stay on the watch
+         (see PRIVACY.md). -->
     <application
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
 

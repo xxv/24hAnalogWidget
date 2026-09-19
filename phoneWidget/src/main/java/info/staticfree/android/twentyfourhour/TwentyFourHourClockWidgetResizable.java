@@ -70,6 +70,11 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 
         final String action = intent.getAction();
 
+        // The system sends this when a widget is added and after a reboot, which clears alarms.
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)) {
+            startTicking(context);
+        }
+
         if (ACTION_CLOCK_UPDATE.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action)
                 || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
             final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass()
@@ -174,7 +179,9 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
      * @return the intent to update the clock
      */
     private PendingIntent createUpdate(Context context) {
-        return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        // Explicit, since implicit broadcasts don't reach manifest receivers (Android 8+).
+        return PendingIntent.getBroadcast(context, 0,
+                new Intent(ACTION_CLOCK_UPDATE).setClass(context, getClass()),
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 }

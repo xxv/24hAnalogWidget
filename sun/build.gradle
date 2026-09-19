@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+// Wear OS app that publishes sun times as complications for the 24h Analog watch face (:wear),
+// which, being a Watch Face Format face, can't run code or read the location itself.
+android {
+    namespace 'info.staticfree.android.twentyfourhour.sun'
+    compileSdkVersion 34
+
+    defaultConfig {
+        applicationId "info.staticfree.android.twentyfourhour.sun"
+        minSdkVersion 30
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.wear.watchface:watchface-complications-data-source:1.3.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+
+    testImplementation 'junit:junit:4.13.2'
+}

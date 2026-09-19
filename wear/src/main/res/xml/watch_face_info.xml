@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFaceInfo>
+    <Preview value="@drawable/widget_preview_circular" />
+    <!-- For the accent color; the sun complication slots aren't customizable. -->
+    <Editable value="true" />
+</WatchFaceInfo>

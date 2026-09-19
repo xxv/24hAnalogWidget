@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    namespace 'info.staticfree.android.twentyfourhour.wearphone'
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "info.staticfree.android.twentyfourhour.wear"
         minSdkVersion 23
-        targetSdkVersion 25
+        targetSdkVersion 34
         versionCode 7
         versionName "1.2.0"
     }
@@ -20,13 +20,10 @@ android {
             applicationIdSuffix '.debug'
         }
     }
-    productFlavors {
-        regular { }
-    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services-wearable:10.2.0'
-    wearApp project(path: ':wear', configuration: 'regularRelease')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
+    implementation project(':wear')
 }

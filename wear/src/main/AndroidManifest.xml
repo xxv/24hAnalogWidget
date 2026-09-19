@@ -1,61 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="info.staticfree.android.twentyfourhour.wear"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+  Watch Face Format (WFF) watch face. This APK is resource-only: the face is described in
+  res/raw/watchface.xml and res/xml/watch_face_info.xml and rendered by the system.
+
+  Sunrise/sunset shading comes from complications published by the :sun module, which is a
+  separate APK because WFF watch faces cannot contain code.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature android:name="android.hardware.type.watch" />
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.network"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
-
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Watch face permissions. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
-        <service
-            android:name="info.staticfree.android.twentyfourhour.WearFace"
-            android:allowEmbedded="true"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_WALLPAPER"
-            android:taskAffinity="">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/widget_preview" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/widget_preview_circular" />
+        android:label="@string/app_name"
+        android:hasCode="false">
 
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
-
-        <activity
-            android:name="info.staticfree.android.twentyfourhour.PermissionRequestActivity"
-            android:label="@string/title_activity_permission_request" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <property
+            android:name="com.google.wear.watchface.format.version"
+            android:value="1" />
 
         <meta-data
             android:name="com.google.android.wearable.standalone"

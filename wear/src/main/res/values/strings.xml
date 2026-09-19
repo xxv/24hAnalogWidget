@@ -4,4 +4,21 @@
     <string name="app_name">24h Analog</string>
     <string name="title_activity_permission_request">Location Permission Request</string>
 
+    <string name="slot_daylight">Sunrise / sunset</string>
+    <string name="slot_civil_twilight">Civil twilight</string>
+    <string name="slot_nautical_twilight">Nautical twilight</string>
+    <string name="slot_astronomical_twilight">Astronomical twilight</string>
+
+    <string name="accent_color">Accent color</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_sky">Sky</string>
+    <string name="accent_teal">Teal</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_yellow">Yellow</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_red">Red</string>
+    <string name="accent_pink">Pink</string>
+    <string name="accent_purple">Purple</string>
+    <string name="accent_white">White</string>
+
 </resources>

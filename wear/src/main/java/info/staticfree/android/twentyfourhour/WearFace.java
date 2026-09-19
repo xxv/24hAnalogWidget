@@ -13,24 +13,26 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.TimeZone;
 
@@ -47,7 +49,6 @@ public class WearFace extends CanvasWatchFaceService {
     private static final float DATE_OVERLAY_OFFSET_X = 0.1875f;
     private static final float DATE_OVERLAY_TEXT_SIZE_SCALE = 0.0625f;
     public static final String PREFS_USER_WANTS_LOCATION = "location_enabled";
-    private static final String TAG = WearFace.class.getSimpleName();
 
     @Override
     public Engine onCreateEngine() {
@@ -103,32 +104,20 @@ public class WearFace extends CanvasWatchFaceService {
                 new HandsOverlay(getApplicationContext(), R.drawable.wear_hour_hand,
                         R.drawable.wear_minute_hand);
 
+        private final FusedLocationProviderClient fusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(WearFace.this);
+
         Engine() {
             sunPositionOverlay.setScale(SUN_POSITION_OVERLAY_SCALE);
             sunPositionOverlay.setShadeAlpha(SHADE_ALPHA);
         }
 
-        private final GoogleApiClient.ConnectionCallbacks connectionCallbacks =
-                new GoogleApiClient.ConnectionCallbacks() {
-                    @SuppressWarnings("MissingPermission")
-                    @Override
-                    public void onConnected(Bundle bundle) {
-                        if (hasLocationPermissions()) {
-                            setLocation(LocationServices.FusedLocationApi
-                                    .getLastLocation(googleApiClient));
-                            requestLocationUpdate();
-                        }
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                    }
-                };
-
-        private final LocationListener locationCallback = new LocationListener() {
+        private final LocationCallback locationCallback = new LocationCallback() {
             @Override
-            public void onLocationChanged(Location location) {
-                setLocation(location);
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    setLocation(location);
+                }
             }
         };
 
@@ -137,23 +126,8 @@ public class WearFace extends CanvasWatchFaceService {
             invalidate();
         }
 
-        private final GoogleApiClient.OnConnectionFailedListener mConnectionFailedListener =
-                new GoogleApiClient.OnConnectionFailedListener() {
-
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.d(TAG, "Error connecting to Google Play Services: " + connectionResult);
-                    }
-                };
-
-        @Nullable
-        private final GoogleApiClient googleApiClient =
-                new GoogleApiClient.Builder(WearFace.this).addApi(LocationServices.API)
-                        .addApi(Wearable.API).addConnectionCallbacks(connectionCallbacks)
-                        .addOnConnectionFailedListener(mConnectionFailedListener).build();
-
         @SuppressWarnings("HandlerLeak")
-        final Handler updateTimeHandler = new Handler() {
+        final Handler updateTimeHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -311,7 +285,11 @@ public class WearFace extends CanvasWatchFaceService {
             filter.addAction(Intent.ACTION_TIME_CHANGED);
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 
-            registerReceiver(timeZoneReceiver, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(timeZoneReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(timeZoneReceiver, filter);
+            }
             registeredTimeZoneReceiver = true;
         }
 
@@ -324,28 +302,34 @@ public class WearFace extends CanvasWatchFaceService {
             unregisterReceiver(timeZoneReceiver);
         }
 
+        @SuppressWarnings("MissingPermission")
         private void connectLocationService() {
-            if (googleApiClient != null) {
-                googleApiClient.connect();
+            if (hasLocationPermissions()) {
+                fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            setLocation(location);
+                        }
+                        requestLocationUpdate();
+                    }
+                });
             }
         }
 
         @SuppressWarnings("MissingPermission")
         private void requestLocationUpdate() {
-            LocationRequest locationRequest =
-                    LocationRequest.create().setPriority(LocationRequest.PRIORITY_LOW_POWER)
-                            .setNumUpdates(1);
+            if (hasLocationPermissions()) {
+                LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 0)
+                        .setMaxUpdates(1)
+                        .build();
 
-            LocationServices.FusedLocationApi
-                    .requestLocationUpdates(googleApiClient, locationRequest, locationCallback);
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            }
         }
 
         private void disconnectLocationService() {
-            if (googleApiClient != null && googleApiClient.isConnected()) {
-                LocationServices.FusedLocationApi
-                        .removeLocationUpdates(googleApiClient, locationCallback);
-                googleApiClient.disconnect();
-            }
+            fusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
 }

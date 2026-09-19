@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">24h Analog Sun</string>
+
+    <string name="slot_daylight">Sunrise / sunset</string>
+    <string name="slot_civil_twilight">Civil twilight</string>
+    <string name="slot_nautical_twilight">Nautical twilight</string>
+    <string name="slot_astronomical_twilight">Astronomical twilight</string>
+
+    <string name="sun_always_below">Sun stays below</string>
+    <string name="sun_always_above">Sun stays above</string>
+    <!-- e.g. "Sunrise / sunset: 06:42–19:10" -->
+    <string name="sun_content_description">%1$s: %2$s</string>
+
+    <string name="status_no_permission">Location permission is needed to work out sunrise and sunset. Reopen this app to grant it.</string>
+    <string name="status_no_location">Waiting for a location…</string>
+    <string name="status_no_background">Allow location \"all the time\" to keep this up to date when you travel. Otherwise, open this app to update the location.</string>
+
+</resources>

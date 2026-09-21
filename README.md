@@ -56,17 +56,43 @@ builds signed APKs and Play bundles and puts them on a draft GitHub release:
     git tag wear-1.3.0 && git push github wear-1.3.0
 
 Signing uses these repository secrets, and the build falls back to unsigned
-artifacts if they're missing:
+artifacts if they're missing. `KEYSTORE_*` is the current release key (a PKCS12
+keystore, where the key password is the keystore password):
 
-| Secret              | Value                                                |
-| ------------------- | ---------------------------------------------------- |
-| `KEYSTORE_BASE64`   | keystore, base64 encoded (`base64 -w0 release.jks`)  |
-| `KEYSTORE_PASSWORD` | keystore password                                    |
-| `KEY_ALIAS`         | key alias within the keystore                        |
-| `KEY_PASSWORD`      | password for that key                                |
+| Secret              | Value                                                    |
+| ------------------- | -------------------------------------------------------- |
+| `KEYSTORE_BASE64`   | keystore, base64 encoded (`base64 -w0 24h-analog.p12`)   |
+| `KEYSTORE_PASSWORD` | keystore password                                        |
+| `KEY_ALIAS`         | key alias within the keystore                            |
+| `KEY_PASSWORD`      | password for that key                                    |
 
+The `OLD_KEYSTORE_*` secrets (`OLD_KEYSTORE_BASE64`, `OLD_KEYSTORE_PASSWORD`,
+`OLD_KEY_ALIAS`, `OLD_KEY_PASSWORD`) are the original 2009 key. They are
+optional, and only used for the phone widget, as explained below.
+
+### Key rotation
+
+The apps were first released with a 1024-bit RSA key from 2009. Releases now use
+a stronger key, and `signing/lineage` is the proof of rotation that lets Android
+accept an update signed by the new key over an install signed by the old one.
+It contains only public certificates, so it's safe to keep in the repository.
+
+- The **Play bundles and the Sun app** (a new app) use the current key.
+- The **watch face APK** is signed with the current key and the lineage. It needs
+  Android 13, so it doesn't need the old key.
+- The **widget APK** supports Android 6 and up. Android 12 and older can't follow
+  a rotation, so those devices see a signature from the *original* key, while
+  Android 13+ sees the new one. That's what Google Play does as well, so Play and
+  sideloaded installs remain compatible on every version. Producing the old-key
+  signature needs the `OLD_KEYSTORE_*` secrets. Without them the widget is signed
+  with the current key only, and installs on Android 12 and older can't update
+  from an earlier build.
+
+`signing/sign-apk.sh` does the signing after the Gradle build, and
+`./signing/sign-apk.sh check-lineage` (also run in CI) checks the lineage file.
 To sign a release build locally, set `KEYSTORE_FILE` (a path), plus the same
-passwords and alias, and run `./gradlew assembleRelease`.
+passwords and alias, and run `./gradlew assembleRelease bundleRelease`. That
+signs with the current key only; use the script for the lineage.
 
 Source
 ------

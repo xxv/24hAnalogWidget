@@ -22,6 +22,9 @@ jobs:
           java-version: '17'
           cache: gradle
 
+      - name: Check the signing lineage
+        run: bash signing/sign-apk.sh check-lineage
+
       - name: Build
         run: ./gradlew assembleDebug
 

@@ -2,11 +2,8 @@
 
 **24h Analog** watch face, **24h Analog Sun** companion app, and **24h Analog** home screen widget
 
-Effective September 19, 2026
-
-These apps are made by Steve Pomeroy, an independent developer. This policy explains what
-information they use and what happens to it. In short: the only personal information any of them
-uses is your approximate location, it's used only to work out sunrise and sunset times, and it
+These apps are made by me, Steve Pomeroy. TL;DR the only personal information any of them
+uses is your approximate location. It's used only to work out sunrise and sunset times, and it
 never leaves your device.
 
 ## At a glance
@@ -39,13 +36,13 @@ and ends, so the watch face can shade the dial.
 about a few kilometers). Sun times only depend on roughly where you are, so the app never asks for
 your precise location.
 
-**Why it uses it.** Only to calculate sunrise, sunset and twilight times. The calculation runs
+**Why it uses it.** To calculate sunrise, sunset and twilight times. The calculation runs
 entirely on your watch.
 
 **Background access.** If you allow location access "all the time", the app checks your
 location when it updates the sun times (at most once every 15 minutes, usually about once an
-hour), so the dial stays right when you travel. If you allow it only while the app is in use, it updates your location only when
-you open the app.
+hour), so the dial stays right when you travel. If you allow it only while the app is in use,
+it updates your location only when you open the app.
 
 **Where your location comes from.** Your watch provides it through Android's location services
 (Google Play services on most watches). Google handles that part under the

@@ -23,11 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -74,9 +70,8 @@ final class WidgetLocation {
     }
 
     boolean hasBackgroundPermission() {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
-                context.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED;
+        return context.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
     }
 
     /**
@@ -151,38 +146,15 @@ final class WidgetLocation {
         String provider = providers.get(index);
 
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // Times out (after about 30 seconds) with a null location.
-                locationManager.getCurrentLocation(provider, null, context.getMainExecutor(),
-                        location -> {
-                            if (location == null) {
-                                requestFrom(locationManager, providers, index + 1, onChanged);
-                            } else if (store(location)) {
-                                onChanged.run();
-                            }
-                        });
-            } else {
-                locationManager.requestSingleUpdate(provider, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        if (store(location)) {
+            // Times out (after about 30 seconds) with a null location.
+            locationManager.getCurrentLocation(provider, null, context.getMainExecutor(),
+                    location -> {
+                        if (location == null) {
+                            requestFrom(locationManager, providers, index + 1, onChanged);
+                        } else if (store(location)) {
                             onChanged.run();
                         }
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                    }
-
-                    @Override
-                    public void onProviderEnabled(@NonNull String provider) {
-                    }
-
-                    @Override
-                    public void onProviderDisabled(@NonNull String provider) {
-                    }
-                }, Looper.getMainLooper());
-            }
+                    });
         } catch (SecurityException | IllegalArgumentException e) {
             Log.w(TAG, "Could not request location from " + provider, e);
             requestFrom(locationManager, providers, index + 1, onChanged);
@@ -194,22 +166,10 @@ final class WidgetLocation {
      */
     @NonNull
     private static List<String> getFreshProviders(@NonNull LocationManager locationManager) {
-        List<String> candidates = new ArrayList<>();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            candidates.add(LocationManager.FUSED_PROVIDER);
-        }
-
-        candidates.add(LocationManager.NETWORK_PROVIDER);
-
-        // Before Android 11 a single update has no timeout, so GPS could stay on indefinitely.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            candidates.add(LocationManager.GPS_PROVIDER);
-        }
-
         List<String> providers = new ArrayList<>();
 
-        for (String provider : candidates) {
+        for (String provider : new String[] {LocationManager.FUSED_PROVIDER,
+                LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER}) {
             if (locationManager.isProviderEnabled(provider)) {
                 providers.add(provider);
             }

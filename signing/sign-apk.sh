@@ -8,26 +8,21 @@
 # key accepts an update signed by the new key.
 #
 # Usage:
-#   sign-apk.sh sign [--modern-only] <unsigned.apk> <signed.apk>
+#   sign-apk.sh sign <unsigned.apk> <signed.apk>
 #   sign-apk.sh check-lineage
 #
 # sign
-#   Signs with the newest key and the lineage.
+#   Signs with the newest key and the lineage, as a v3 signature only.
 #
-#   --modern-only  For apps that need Android 13 or newer (the watch face). Uses only a v3
-#                  signature, which doesn't need the old key.
+#   Every app that goes through this script (the watch face and the widget) has a minSdkVersion
+#   of 33 (Android 13) or higher, which is also the OS version from which Android recognizes a
+#   rotated key. So there's no device this can install on that needs a signature from the
+#   original key, and the original keystore is never needed here. (A brand new app with no prior
+#   release, like the Sun app, doesn't need any of this: Gradle signs it with the current key
+#   directly, with no lineage.)
 #
-#   Without --modern-only the APK also carries the legacy signatures that Android 12 and older
-#   need, and those must be made by the OLD key, so it has to be provided (OLD_KEYSTORE_FILE,
-#   below). Devices on Android 13+ use the new key; older ones keep using the old key. That is
-#   what Google Play does too, so Play and sideloaded installs stay compatible on every version.
-#   If the old key isn't provided the APK is signed with the new key only, and existing installs
-#   on Android 12 and older can't update in place.
-#
-# The keys come from the environment; passwords never appear on a command line:
-#   KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD      the newest key
-#   OLD_KEYSTORE_FILE, OLD_KEYSTORE_PASSWORD, OLD_KEY_ALIAS,
-#   OLD_KEY_PASSWORD                                               the original key (optional)
+# The key comes from the environment; the password never appears on a command line:
+#   KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
 #   LINEAGE_FILE     lineage to use (default: lineage next to this script)
 #   APKSIGNER        path to apksigner (default: found in the Android SDK)
 #
@@ -107,13 +102,7 @@ check_lineage() {
 }
 
 sign_apk() {
-    local modern_only=false
-    if [ "${1:-}" = "--modern-only" ]; then
-        modern_only=true
-        shift
-    fi
-
-    [ $# -eq 2 ] || die "usage: sign-apk.sh sign [--modern-only] <unsigned.apk> <signed.apk>"
+    [ $# -eq 2 ] || die "usage: sign-apk.sh sign <unsigned.apk> <signed.apk>"
     local input="$1" output="$2"
     [ -f "$input" ] || die "no such APK: $input"
 
@@ -130,33 +119,17 @@ sign_apk() {
     work="$(mktemp -d)"
     cp "$input" "$work/in.apk"
 
-    local new_key=(--ks "$(native "$KEYSTORE_FILE")" --ks-pass env:KEYSTORE_PASSWORD
-        --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD)
-    local args
+    echo "signing $(basename "$input"): newest key + lineage, v3 only"
 
-    if $modern_only; then
-        echo "signing $(basename "$input"): newest key + lineage, v3 only (Android 13+)"
-        args=("${new_key[@]}" --lineage "$(native "$lineage")"
-            --v1-signing-enabled false --v2-signing-enabled false)
-    elif [ -n "${OLD_KEYSTORE_FILE:-}" ]; then
-        : "${OLD_KEYSTORE_PASSWORD:?OLD_KEYSTORE_PASSWORD is not set}"
-        : "${OLD_KEY_ALIAS:?OLD_KEY_ALIAS is not set}" "${OLD_KEY_PASSWORD:?OLD_KEY_PASSWORD is not set}"
-
-        echo "signing $(basename "$input"): original key + newest key + lineage"
-        args=(--ks "$(native "$OLD_KEYSTORE_FILE")" --ks-pass env:OLD_KEYSTORE_PASSWORD
-            --ks-key-alias "$OLD_KEY_ALIAS" --key-pass env:OLD_KEY_PASSWORD
-            --next-signer "${new_key[@]}" --lineage "$(native "$lineage")")
-    else
-        echo "::warning::No OLD_KEYSTORE_FILE, so $(basename "$input") is signed with the new key only." \
-            "Installs on Android 12 and older that have an older build can't update in place."
-        args=("${new_key[@]}")
-    fi
-
-    "$apksigner" sign "${args[@]}" --v4-signing-enabled false \
+    "$apksigner" sign \
+        --ks "$(native "$KEYSTORE_FILE")" --ks-pass env:KEYSTORE_PASSWORD \
+        --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD \
+        --lineage "$(native "$lineage")" \
+        --v1-signing-enabled false --v2-signing-enabled false --v4-signing-enabled false \
         --out "$(native "$work/out.apk")" "$(native "$work/in.apk")" ||
         die "apksigner failed for $input"
 
-    # Check the result the way an Android 13+ device would see it.
+    # Check the result the way a device would see it (every supported app has minSdkVersion 33).
     local report
     report="$("$apksigner" verify --min-sdk-version 33 --print-certs "$(native "$work/out.apk")")" ||
         die "the signed APK doesn't verify"

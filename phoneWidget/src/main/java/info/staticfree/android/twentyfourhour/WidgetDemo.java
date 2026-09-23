@@ -19,7 +19,6 @@ package info.staticfree.android.twentyfourhour;
 
 import android.Manifest;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -75,8 +74,7 @@ public class WidgetDemo extends Activity {
             widgetLocation.requestFresh(this::onLocationChanged);
 
             // Without background access, the widget's location only updates when this is opened.
-            if (!widgetLocation.hasBackgroundPermission() &&
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (!widgetLocation.hasBackgroundPermission()) {
                 requestPermissions(new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                         REQUEST_BACKGROUND_LOCATION);
             }

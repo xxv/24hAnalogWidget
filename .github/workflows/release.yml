@@ -10,18 +10,12 @@ name: Release
 # Signing uses the repository secrets below (Settings -> Secrets and variables -> Actions). See
 # the README for how to create them.
 #
-# The current release key:
+# The current release key (a PKCS12 keystore, where the key password is the keystore password):
 #
 #   KEYSTORE_BASE64    the keystore, base64 encoded: base64 -w0 24h-analog.p12
 #   KEYSTORE_PASSWORD  keystore password
 #   KEY_ALIAS          key alias within the keystore
-#   KEY_PASSWORD       password for that key (for a PKCS12 keystore, the keystore password)
-#
-# The original (2009) key, only needed for the phone widget's signatures on Android 12 and older
-# (see signing/sign-apk.sh). Leave these unset and the widget is signed with the current key only,
-# which older-Android installs that came from an earlier build can't update to in place:
-#
-#   OLD_KEYSTORE_BASE64, OLD_KEYSTORE_PASSWORD, OLD_KEY_ALIAS, OLD_KEY_PASSWORD
+#   KEY_PASSWORD       password for that key
 #
 # Without KEYSTORE_BASE64 the build still runs, but the artifacts are unsigned and can't be
 # installed.
@@ -30,8 +24,11 @@ name: Release
 #
 #   bundles (.aab)   the current key, by Gradle. This is also the upload key for Google Play.
 #   Sun app APK      the current key, by Gradle. It's a new app, so there's nothing to chain from.
-#   watch face APK   the current key plus the lineage from the original key (Android 13+ only).
-#   widget APK       as the watch face, plus the original key for Android 12 and older.
+#   watch face APK   the current key plus the lineage from the original key (signing/sign-apk.sh).
+#   widget APK       as the watch face.
+#
+# The watch face and widget both need Android 13+ (see their minSdkVersion), which is also the
+# version from which Android recognizes a rotated key, so the original key is never needed here.
 
 on:
   push:
@@ -68,11 +65,10 @@ jobs:
       - name: Unit tests
         run: ./gradlew test
 
-      - name: Decode the keystores
+      - name: Decode the keystore
         id: keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          OLD_KEYSTORE_BASE64: ${{ secrets.OLD_KEYSTORE_BASE64 }}
         run: |
           if [ -z "$KEYSTORE_BASE64" ]; then
             echo "::warning::No KEYSTORE_BASE64 secret; the release will be unsigned."
@@ -81,11 +77,6 @@ jobs:
 
           echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.p12"
           echo "path=$RUNNER_TEMP/release.p12" >> "$GITHUB_OUTPUT"
-
-          if [ -n "$OLD_KEYSTORE_BASE64" ]; then
-            echo "$OLD_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/original.p12"
-            echo "old_path=$RUNNER_TEMP/original.p12" >> "$GITHUB_OUTPUT"
-          fi
 
       # Gradle signs these with the current key.
       - name: Build the bundles and the Sun app
@@ -107,12 +98,8 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          OLD_KEYSTORE_FILE: ${{ steps.keystore.outputs.old_path }}
-          OLD_KEYSTORE_PASSWORD: ${{ secrets.OLD_KEYSTORE_PASSWORD }}
-          OLD_KEY_ALIAS: ${{ secrets.OLD_KEY_ALIAS }}
-          OLD_KEY_PASSWORD: ${{ secrets.OLD_KEY_PASSWORD }}
         run: |
-          bash signing/sign-apk.sh sign --modern-only \
+          bash signing/sign-apk.sh sign \
             wear/build/outputs/apk/release/wear-release-unsigned.apk signed/wear-release.apk
           bash signing/sign-apk.sh sign \
             phoneWidget/build/outputs/apk/release/phoneWidget-release-unsigned.apk signed/phoneWidget-release.apk
@@ -152,21 +139,14 @@ jobs:
           {
             echo "### APK signatures"
             echo
-            echo "Signer certificates (SHA-256). An APK with a rotated key lists which one applies"
-            echo "to which Android versions: the original key up to Android 12, the new one from 13."
-            echo
-            echo "| File | Signer |"
+            echo "| File | Signer certificate (SHA-256) |"
             echo "| --- | --- |"
           } >> "$GITHUB_STEP_SUMMARY"
 
           for apk in artifacts/*.apk; do
             if report="$("$apksigner" verify --print-certs "$apk" 2>&1)"; then
-              signers="$(sed -n \
-                -e 's/^Signer #1 certificate SHA-256 digest: \(.*\)$/`\1`/p' \
-                -e 's/^Signer (minSdkVersion=\([0-9]*\), maxSdkVersion=2147483647) certificate SHA-256 digest: \(.*\)$/Android API \1+: `\2`/p' \
-                -e 's/^Signer (minSdkVersion=\([0-9]*\), maxSdkVersion=\([0-9]*\)) certificate SHA-256 digest: \(.*\)$/Android API \1-\2: `\3`/p' \
-                <<<"$report" | paste -sd '~' - | sed 's/~/<br>/g')"
-              echo "| $(basename "$apk") | $signers |" >> "$GITHUB_STEP_SUMMARY"
+              digest="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<<"$report")"
+              echo "| $(basename "$apk") | \`$digest\` |" >> "$GITHUB_STEP_SUMMARY"
             else
               echo "::warning::$(basename "$apk") is not signed; set the signing secrets to get installable builds."
               echo "| $(basename "$apk") | **not signed** |" >> "$GITHUB_STEP_SUMMARY"

@@ -465,7 +465,7 @@
                                 value="[COMPLICATION.RANGED_VALUE_VALUE] * 15 + 179" />
                             <Transform target="endAngle"
                                 value="[COMPLICATION.RANGED_VALUE_VALUE] * 15 + 181" />
-                            <Stroke color="#7FFFC90E" thickness="138" cap="BUTT" />
+                            <Stroke color="#5FFFC90E" thickness="138" cap="BUTT" />
                         </Arc>
                     </PartDraw>
                 </Group>

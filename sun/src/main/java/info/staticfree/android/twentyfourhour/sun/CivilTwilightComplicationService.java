@@ -1,5 +1,7 @@
 package info.staticfree.android.twentyfourhour.sun;
 
+import info.staticfree.android.twentyfourhour.solar.SolarCalculator;
+
 public class CivilTwilightComplicationService extends SunComplicationService {
     @Override
     protected double getAltitude() {

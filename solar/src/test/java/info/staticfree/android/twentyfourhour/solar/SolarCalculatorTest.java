@@ -1,4 +1,4 @@
-package info.staticfree.android.twentyfourhour.sun;
+package info.staticfree.android.twentyfourhour.solar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

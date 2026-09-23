@@ -1,0 +1,13 @@
+apply plugin: 'java-library'
+
+// The sun-position math shared by :sun (Wear OS complications) and :lib (the phone widget's
+// SunPositionOverlay). Plain Java, no Android dependency, so it also runs as a fast unit test
+// without an emulator or Robolectric.
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}

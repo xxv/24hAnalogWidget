@@ -1,4 +1,4 @@
-package info.staticfree.android.twentyfourhour.sun;
+package info.staticfree.android.twentyfourhour.solar;
 
 /*
  * Copyright (C) 2026 Steve Pomeroy <steve@staticfree.info>
@@ -16,8 +16,6 @@ package info.staticfree.android.twentyfourhour.sun;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import androidx.annotation.NonNull;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -59,7 +57,7 @@ public final class SolarCalculator {
         public final double noon;
         public final double end;
 
-        Interval(double start, double noon, double end) {
+        public Interval(double start, double noon, double end) {
             this.start = start;
             this.noon = noon;
             this.end = end;
@@ -75,15 +73,13 @@ public final class SolarCalculator {
             return end - start >= 24;
         }
 
-        @NonNull
         @Override
         public String toString() {
             return "Interval{start=" + start + ", noon=" + noon + ", end=" + end + '}';
         }
     }
 
-    @NonNull
-    public static Interval compute(@NonNull LocalDate date, @NonNull ZoneId zone, double latitude,
+    public static Interval compute(LocalDate date, ZoneId zone, double latitude,
             double longitude, double altitude) {
         long noon = solarNoon(date, zone, longitude);
         double noonHour = wallClockHour(noon, zone);
@@ -135,7 +131,7 @@ public final class SolarCalculator {
     /**
      * Finds the solar noon closest to 12:00 local time on the given date.
      */
-    static long solarNoon(@NonNull LocalDate date, @NonNull ZoneId zone, double longitude) {
+    static long solarNoon(LocalDate date, ZoneId zone, double longitude) {
         long t = date.atTime(12, 0).atZone(zone).toInstant().toEpochMilli();
 
         // The hour angle changes by one degree every four minutes; a few iterations converge.
@@ -146,7 +142,7 @@ public final class SolarCalculator {
         return t;
     }
 
-    private static double wallClockHour(long epochMs, @NonNull ZoneId zone) {
+    private static double wallClockHour(long epochMs, ZoneId zone) {
         ZonedDateTime time = Instant.ofEpochMilli(epochMs).atZone(zone);
 
         return time.getHour() + time.getMinute() / 60.0 + time.getSecond() / 3600.0 +
@@ -174,7 +170,7 @@ public final class SolarCalculator {
      * @return the hour angle in degrees, in [-180, 180). 0 is solar noon; positive is afternoon.
      */
     private static double hourAngle(long epochMs, double longitude,
-            @NonNull SolarPosition position) {
+            SolarPosition position) {
         double utcMinutes = Math.floorMod(epochMs, 86_400_000L) / (double) MINUTE_MS;
         double trueSolarMinutes = utcMinutes + position.equationOfTime + 4 * longitude;
         double ha = trueSolarMinutes / 4 - 180;

@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import info.staticfree.android.twentyfourhour.solar.SolarCalculator;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;

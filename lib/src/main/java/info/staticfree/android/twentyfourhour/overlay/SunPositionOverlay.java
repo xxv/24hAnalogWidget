@@ -1,7 +1,7 @@
 package info.staticfree.android.twentyfourhour.overlay;
 
 /*
- * Copyright (C) 2011-2017 Steve Pomeroy <steve@staticfree.info>
+ * Copyright (C) 2011-2026 Steve Pomeroy <steve@staticfree.info>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package info.staticfree.android.twentyfourhour.overlay;
  * 20130315 - modified to add Civil, Nautical, Astronomical twilight
  * times by Rob Prior <android@b4.ca>
  *
+ * 2026 - replaced jSunTimes with SolarCalculator (NOAA solar position equations), shared with
+ * the Wear OS companion app. See SolarCalculator's javadoc for accuracy notes.
  */
 
 import android.content.Context;
@@ -31,33 +33,23 @@ import android.graphics.Shader;
 import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import info.staticfree.android.twentyfourhour.lib.R;
-import uk.me.jstott.coordconv.LatitudeLongitude;
-import uk.me.jstott.sun.Sun;
-import uk.me.jstott.sun.Time;
-
-import static uk.me.jstott.sun.Sun.eveningAstronomicalTwilightTime;
-import static uk.me.jstott.sun.Sun.eveningCivilTwilightTime;
-import static uk.me.jstott.sun.Sun.eveningNauticalTwilightTime;
-import static uk.me.jstott.sun.Sun.morningAstronomicalTwilightTime;
-import static uk.me.jstott.sun.Sun.morningCivilTwilightTime;
-import static uk.me.jstott.sun.Sun.morningNauticalTwilightTime;
+import info.staticfree.android.twentyfourhour.solar.SolarCalculator;
 
 public class SunPositionOverlay implements DialOverlay {
-    private static final String TAG = SunPositionOverlay.class.getSimpleName();
     private static final float HIGH_NOON_ARC_ANGLE = 2;
     private static final float DEGREE_CIRCLE = 360;
 
     private final RectF inset = new RectF();
-    private final LatitudeLongitude latLon = new LatitudeLongitude(0, 0);
 
-    @Nullable
-    private Location location;
+    private double latitude;
+    private double longitude;
+    private boolean hasLocation;
 
     private static final Paint OVERLAY_NO_INFO_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -99,17 +91,29 @@ public class SunPositionOverlay implements DialOverlay {
     }
 
     public void setLocation(@Nullable Location location) {
-        this.location = location;
+        hasLocation = location != null;
 
         if (location != null) {
-            latLon.setLatitude(location.getLatitude());
-            latLon.setLongitude(location.getLongitude());
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
         }
     }
 
-    private float getHourArcAngle(@NonNull Time time) {
-        return (HandsOverlay.getHourHandAngle(time.getHours(), time.getMinutes()) + 270) %
-                DEGREE_CIRCLE;
+    /**
+     * @return the {@link Canvas#drawArc} angle (0 = 3 o'clock, clockwise) for an hour-of-day.
+     * {@link HandsOverlay#getHourHandAngle} uses a 12-o'clock-relative convention instead (as does
+     * the hand image itself), hence the 270 degree (-90 degree) shift between the two. Takes the
+     * fractional, possibly out-of-range hours-of-day that a {@link SolarCalculator.Interval} can
+     * have (negative, or beyond 24, when the interval crosses midnight).
+     */
+    private static float getHourArcAngle(double hourOfDay) {
+        double handAngle = (hourOfDay + 12) % 24;
+
+        if (handAngle < 0) {
+            handAngle += 24;
+        }
+
+        return (float) ((handAngle * 15 + 270) % DEGREE_CIRCLE);
     }
 
     private void drawPlaceholder(@NonNull Canvas canvas) {
@@ -123,56 +127,43 @@ public class SunPositionOverlay implements DialOverlay {
         int insetH = (int) (h / 2.0f * scale);
         inset.set(cX - insetW, cY - insetH, cX + insetW, cY + insetH);
 
-        if (location == null) {
+        if (!hasLocation) {
             // not much we can do if we don't have a location
             drawPlaceholder(canvas);
 
             return;
         }
 
-        TimeZone tz = calendar.getTimeZone();
+        LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH));
+        ZoneId zone = calendar.getTimeZone().toZoneId();
 
-        boolean dst = calendar.get(Calendar.DST_OFFSET) != 0;
+        SolarCalculator.Interval daylight =
+                SolarCalculator.compute(date, zone, latitude, longitude, SolarCalculator.ALTITUDE_DAYLIGHT);
 
-        try {
-            float morningSunAngle = getHourArcAngle(Sun.sunriseTime(calendar, latLon, tz, dst));
+        drawInsetArc(canvas, getHourArcAngle(daylight.end), getHourArcAngle(daylight.start),
+                OVERLAY_SUNSET);
 
-            float eveningSunAngle = getHourArcAngle(Sun.sunsetTime(calendar, latLon, tz, dst));
-
-            float highNoon = (DEGREE_CIRCLE + morningSunAngle +
-                    ((DEGREE_CIRCLE + (eveningSunAngle - morningSunAngle)) % DEGREE_CIRCLE) / 2) %
-                    DEGREE_CIRCLE;
-
-            drawInsetArc(canvas, eveningSunAngle, morningSunAngle, OVERLAY_SUNSET);
-
-            if (showTwilight) {
-                drawInsetArc(canvas,
-                        getHourArcAngle(eveningCivilTwilightTime(calendar, latLon, tz, dst)),
-                        getHourArcAngle(morningCivilTwilightTime(calendar, latLon, tz, dst)),
-                        OVERLAY_SUNSET);
-                drawInsetArc(canvas,
-                        getHourArcAngle(eveningNauticalTwilightTime(calendar, latLon, tz, dst)),
-                        getHourArcAngle(morningNauticalTwilightTime(calendar, latLon, tz, dst)),
-                        OVERLAY_SUNSET);
-                drawInsetArc(canvas,
-                        getHourArcAngle(eveningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
-                        getHourArcAngle(morningAstronomicalTwilightTime(calendar, latLon, tz, dst)),
-                        OVERLAY_SUNSET);
-            }
-
-            if (showHighNoon) {
-                if (Math.abs(eveningSunAngle - morningSunAngle) > 0) {
-                    canvas.drawArc(inset, highNoon - HIGH_NOON_ARC_ANGLE / 2, HIGH_NOON_ARC_ANGLE,
-                            true, OVERLAY_SUN);
-                }
-            }
-
-            // this can happen when lat/lon and the timezone are out of sync, causing impossible
-            // sunrise/sunset times to be calculated.
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Error computing sunrise / sunset time", e);
-            drawPlaceholder(canvas);
+        if (showTwilight) {
+            drawTwilightArc(canvas, date, zone, SolarCalculator.ALTITUDE_CIVIL_TWILIGHT);
+            drawTwilightArc(canvas, date, zone, SolarCalculator.ALTITUDE_NAUTICAL_TWILIGHT);
+            drawTwilightArc(canvas, date, zone, SolarCalculator.ALTITUDE_ASTRONOMICAL_TWILIGHT);
         }
+
+        if (showHighNoon && !daylight.isAlwaysBelow()) {
+            float highNoon = getHourArcAngle(daylight.noon);
+            canvas.drawArc(inset, highNoon - HIGH_NOON_ARC_ANGLE / 2, HIGH_NOON_ARC_ANGLE, true,
+                    OVERLAY_SUN);
+        }
+    }
+
+    private void drawTwilightArc(@NonNull Canvas canvas, @NonNull LocalDate date,
+            @NonNull ZoneId zone, double altitude) {
+        SolarCalculator.Interval interval =
+                SolarCalculator.compute(date, zone, latitude, longitude, altitude);
+
+        drawInsetArc(canvas, getHourArcAngle(interval.end), getHourArcAngle(interval.start),
+                OVERLAY_SUNSET);
     }
 
     private void drawInsetArc(@NonNull Canvas canvas, float startAngle, float endAngle,

@@ -5,7 +5,9 @@ android {
     compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion 23
+        // Matches :phoneWidget, its only consumer. Also lets SunPositionOverlay use java.time
+        // (TimeZone.toZoneId(), etc.) natively, without core library desugaring.
+        minSdkVersion 33
         targetSdkVersion 33
     }
     buildTypes {
@@ -17,6 +19,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':solar')
     implementation 'androidx.appcompat:appcompat:1.7.0'
 }

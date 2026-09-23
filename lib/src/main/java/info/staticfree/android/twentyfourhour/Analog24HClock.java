@@ -201,12 +201,13 @@ public class Analog24HClock extends View {
         final int w = mDialWidth;
         final int h = mDialHeight;
 
-        boolean scaled = false;
+        // Fit the dial to the view, scaling up as well as down. Only scaling down left a view
+        // bigger than the face drawable (the widget's bitmap, or the preview activity) drawing a
+        // small dial adrift in empty space.
+        final float scale = Math.min((float) availW / (float) w, (float) availH / (float) h);
+        final boolean scaled = scale != 1.0f;
 
-        if (availW < w || availH < h) {
-            scaled = true;
-            final float scale = Math.min((float) availW / (float) w,
-                    (float) availH / (float) h);
+        if (scaled) {
             canvas.save();
             canvas.scale(scale, scale, cX, cY);
         }

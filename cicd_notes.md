@@ -15,7 +15,7 @@ keystore, where the key password is the keystore password):
 
 | Secret              | Value                                                    |
 | ------------------- | -------------------------------------------------------- |
-| `KEYSTORE_BASE64`   | keystore, base64 encoded (`base64 -w0 24h-analog.p12`)   |
+| `KEYSTORE_BASE64`   | keystore, base64 encoded   |
 | `KEYSTORE_PASSWORD` | keystore password                                        |
 | `KEY_ALIAS`         | key alias within the keystore                            |
 | `KEY_PASSWORD`      | password for that key                                    |
@@ -25,7 +25,6 @@ keystore, where the key password is the keystore password):
 The apps were first released with a 1024-bit RSA key from 2009. Releases now use
 a stronger key, and `signing/lineage` is the proof of rotation that lets Android
 accept an update signed by the new key over an install signed by the old one.
-It contains only public certificates, so it's safe to keep in the repository.
 
 - The **Play bundles and the Sun app** (a new app) use the current key.
 - The **watch face and widget APKs** are signed with the current key and the

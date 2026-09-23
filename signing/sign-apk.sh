@@ -17,9 +17,7 @@
 #   Every app that goes through this script (the watch face and the widget) has a minSdkVersion
 #   of 33 (Android 13) or higher, which is also the OS version from which Android recognizes a
 #   rotated key. So there's no device this can install on that needs a signature from the
-#   original key, and the original keystore is never needed here. (A brand new app with no prior
-#   release, like the Sun app, doesn't need any of this: Gradle signs it with the current key
-#   directly, with no lineage.)
+#   original key, and the original keystore is never needed here.
 #
 # The key comes from the environment; the password never appears on a command line:
 #   KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD

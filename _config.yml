@@ -1,0 +1,21 @@
+# GitHub Pages (Settings -> Pages -> Deploy from a branch -> master, / (root)).
+#
+# This exists so PRIVACY.md renders as a real HTML page for the Google Play listing, without
+# keeping a second copy of the text: Jekyll converts any Markdown file that has YAML front
+# matter, and PRIVACY.md's front matter publishes it at /privacy/.
+title: 24h Analog Clock
+description: A 24 hour analog clock widget and Wear OS watch face
+theme: jekyll-theme-primer
+
+# Source that isn't worth publishing as part of the site. extra/ stays, since the README's
+# screenshots live there.
+exclude:
+  - gradle/
+  - gradlew
+  - gradlew.bat
+  - lib/
+  - phoneWidget/
+  - signing/
+  - solar/
+  - sun/
+  - wear/

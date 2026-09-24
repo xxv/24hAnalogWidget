@@ -1,3 +1,8 @@
+---
+title: Privacy Policy
+permalink: /privacy/
+---
+
 # Privacy Policy
 
 **24h Analog** watch face, **24h Analog Sun** companion app, and **24h Analog** home screen widget

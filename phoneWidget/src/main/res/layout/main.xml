@@ -9,11 +9,22 @@
         android:id="@+id/clock"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/intro_text"
+        android:layout_above="@+id/location_status"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip" />
+
+    <TextView
+        android:id="@+id/location_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/intro_text"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/intro_text"

@@ -6,10 +6,12 @@ android {
 
     defaultConfig {
         applicationId "info.staticfree.android.twentyfourhour"
-        minSdkVersion 30
+        // Android 13+, matching :wear. Below that, sideloaded updates would need the original
+        // signing key (see signing/sign-apk.sh) as well as this one.
+        minSdkVersion 33
         targetSdkVersion 33
-        versionCode 9
-        versionName "0.5.0"
+        versionCode 10
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -24,3 +26,5 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation project(':lib')
 }
+
+apply from: "$rootDir/gradle/signing.gradle"

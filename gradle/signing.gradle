@@ -1,0 +1,37 @@
+// Release signing for the app modules, driven by the environment so the keystore never has to
+// live in the repository. Applied by wear, sun and phoneWidget.
+//
+// This signs with the current key only. That is right for the Play bundles and the Sun app, but
+// the watch face and widget APKs that are sideloaded also need the proof of rotation from the
+// original key, so the release workflow builds those unsigned and signs them with
+// signing/sign-apk.sh instead.
+//
+// Set these when building a release (the GitHub Actions release workflow does it from secrets):
+//
+//   KEYSTORE_FILE      path to the keystore
+//   KEYSTORE_PASSWORD  keystore password
+//   KEY_ALIAS          key alias within the keystore
+//   KEY_PASSWORD       password for that key
+//
+// Without them the release build is simply left unsigned, as it was before.
+
+def keystorePath = System.getenv('KEYSTORE_FILE')
+
+if (keystorePath) {
+    android {
+        signingConfigs {
+            release {
+                storeFile file(keystorePath)
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}

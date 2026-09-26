@@ -21,8 +21,13 @@ android {
 }
 
 dependencies {
+    // SolarCalculator, shared with the phone widget via :lib.
+    implementation project(':solar')
+
     implementation 'androidx.wear.watchface:watchface-complications-data-source:1.3.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
 
     testImplementation 'junit:junit:4.13.2'
 }
+
+apply from: "$rootDir/gradle/signing.gradle"

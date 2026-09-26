@@ -70,6 +70,11 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
 
         final String action = intent.getAction();
 
+        // The system sends this when a widget is added and after a reboot, which clears alarms.
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)) {
+            startTicking(context);
+        }
+
         if (ACTION_CLOCK_UPDATE.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action)
                 || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
             final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass()
@@ -93,7 +98,11 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
         if (clock == null) {
             clock = new Analog24HClock(context);
             clock.setShowSeconds(false);
-            clock.addDialOverlay(new SunPositionOverlay(context));
+            final SunPositionOverlay sunOverlay = new SunPositionOverlay(context);
+            final WidgetLocation widgetLocation = new WidgetLocation(context);
+            widgetLocation.checkFromBackground();
+            sunOverlay.setLocation(widgetLocation.get());
+            clock.addDialOverlay(sunOverlay);
 
             final int s = (int) getSize(context);
             clock.onSizeChanged(s, s, 0, 0);
@@ -141,6 +150,18 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
         }
     }
 
+    /**
+     * Redraws all the clock widgets, for example after the location changes.
+     *
+     * @param context application context
+     */
+    public static void updateAll(Context context) {
+        for (Class<?> widget : new Class<?>[] {TwentyFourHourClockWidgetResizable.class,
+                TwentyFourHourClockWidget.class, TwentyFourHourClockWidget3x.class}) {
+            context.sendBroadcast(new Intent(ACTION_CLOCK_UPDATE).setClass(context, widget));
+        }
+    }
+
     protected float getDisplayDensity(Context context) {
         final DisplayMetrics dm = new DisplayMetrics();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
@@ -174,7 +195,9 @@ public class TwentyFourHourClockWidgetResizable extends AppWidgetProvider {
      * @return the intent to update the clock
      */
     private PendingIntent createUpdate(Context context) {
-        return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        // Explicit, since implicit broadcasts don't reach manifest receivers (Android 8+).
+        return PendingIntent.getBroadcast(context, 0,
+                new Intent(ACTION_CLOCK_UPDATE).setClass(context, getClass()),
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 }

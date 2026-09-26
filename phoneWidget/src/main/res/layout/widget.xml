@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- match_parent so the dial can use the whole cell: with wrap_content the image was capped at
+     the bitmap's own size, and a cell larger than that went unused. The default fitCenter scale
+     type keeps the square dial centered in a cell of any shape. -->
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/clock"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:src="@drawable/clock_face"
     android:contentDescription="@string/app_name" />

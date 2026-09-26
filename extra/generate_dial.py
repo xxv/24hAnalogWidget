@@ -25,7 +25,7 @@ SVG_SCALE = SIZE / 1120
 
 # Colors. The accent comes from the user's choice in the watch face editor.
 ACCENT = "[CONFIGURATION.accent]"
-DISC_COLOR = "#FF797979"
+DISC_COLOR = "#FF616161"  # the original #797979, dimmed 20% for OLED screens
 HOUR_COLOR = "#94FFFFFF"
 MINUTE_LABEL_COLOR = "#DDFFFFFF"
 MINUTE_TICK_COLOR = "#8BF2F2F2"
@@ -78,6 +78,16 @@ def text(label, x, y, width, height, font_size, color):
         </PartText>"""
 
 
+def hidden_in_ambient(name, parts):
+    """Groups parts so they're hidden in ambient (always-on) mode, keeping that mode simple."""
+    body = "\n".join("    " + row for part in parts for row in part.split("\n"))
+    return f"""\
+        <Group x="0" y="0" width="{SIZE}" height="{SIZE}" name="{name}">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+{body}
+        </Group>"""
+
+
 def line(start, end, color, thickness):
     return (f'            <Line startX="{f(start[0])}" startY="{f(start[1])}" '
             f'endX="{f(end[0])}" endY="{f(end[1])}"><Stroke color="{color}" '
@@ -106,8 +116,9 @@ def generate_dial():
             </Ellipse>
         </PartDraw>""")
 
-    # Minute ticks, except where there's a minute label.
+    # Minute ticks, except where there's a minute label. Hidden in ambient.
     out.append(f'        <PartDraw x="0" y="0" width="{SIZE}" height="{SIZE}" name="minute_ticks">')
+    out.append('            <Variant mode="AMBIENT" target="alpha" value="0" />')
     for minute in range(60):
         if minute % 5 == 0:
             continue
@@ -115,11 +126,13 @@ def generate_dial():
                         MINUTE_TICK_COLOR, TICK_THICKNESS))
     out.append("        </PartDraw>")
 
-    # Minute labels every five minutes.
+    # Minute labels every five minutes. Hidden in ambient.
+    labels = []
     for minute in range(0, 60, 5):
         x, y = polar(MINUTE_RADIUS, minute * 6)
-        out.append(text(f"{minute:02d}", x, y, 24, MINUTE_FONT_SIZE * 1.3, MINUTE_FONT_SIZE,
-                        MINUTE_LABEL_COLOR))
+        labels.append(text(f"{minute:02d}", x, y, 24, MINUTE_FONT_SIZE * 1.3, MINUTE_FONT_SIZE,
+                           MINUTE_LABEL_COLOR))
+    out.append(hidden_in_ambient("minute_labels", labels))
 
     # Accent pips on each hour: small rounded squares, rotated to face the center.
     pip_x = f(C - PIP_SIZE / 2)
@@ -132,13 +145,16 @@ def generate_dial():
             </RoundRectangle>
         </PartDraw>""")
 
-    # Hour numbers; noon and midnight get the sun and moon instead.
+    # Hour numbers; noon and midnight get the sun and moon instead. Hidden in ambient, where the
+    # pips, sun and moon are enough to read the dial.
+    numbers = []
     for hour in range(1, 24):
         if hour == 12:
             continue
         x, y = polar(HOUR_RADIUS, hour_angle(hour))
-        out.append(text(f"{hour:02d}", x, y, 44, HOUR_FONT_SIZE * 1.2, HOUR_FONT_SIZE,
-                        HOUR_COLOR))
+        numbers.append(text(f"{hour:02d}", x, y, 44, HOUR_FONT_SIZE * 1.2, HOUR_FONT_SIZE,
+                            HOUR_COLOR))
+    out.append(hidden_in_ambient("hour_numbers", numbers))
 
     # Sun at noon: a ring with eight rays.
     sun_x, sun_y = polar((560 - 106.67) * SVG_SCALE, hour_angle(12))

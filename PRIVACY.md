@@ -1,13 +1,15 @@
+---
+title: Privacy Policy
+permalink: /privacy/
+---
+
 # Privacy Policy
 
 **24h Analog** watch face, **24h Analog Sun** companion app, and **24h Analog** home screen widget
 
-Effective September 19, 2026
-
-These apps are made by Steve Pomeroy, an independent developer. This policy explains what
-information they use and what happens to it. In short: the only personal information any of them
-uses is your approximate location, it's used only to work out sunrise and sunset times, and it
-never leaves your watch.
+These apps are made by me, Steve Pomeroy. TL;DR the only personal information any of them
+uses is your approximate location. It's used only to work out sunrise and sunset times, and it
+never leaves your device.
 
 ## At a glance
 
@@ -15,11 +17,11 @@ never leaves your watch.
 | --- | --- | --- | --- |
 | 24h Analog (watch face) | `info.staticfree.android.twentyfourhour.wear` | None | — |
 | 24h Analog Sun (Wear OS) | `info.staticfree.android.twentyfourhour.sun` | Approximate location | No |
-| 24h Analog (widget) | `info.staticfree.android.twentyfourhour` | None | — |
+| 24h Analog (widget) | `info.staticfree.android.twentyfourhour` | Approximate location | No |
 
 None of these apps show ads or include analytics, tracking or crash-reporting tools. None of them
 ask you to create an account. None of them sell, share or send your information to the developer
-or to anyone else. The 24h Analog Sun app doesn't have permission to use the internet at all.
+or to anyone else. Neither the 24h Analog Sun app nor the widget has permission to use the internet at all.
 
 ## 24h Analog watch face
 
@@ -39,13 +41,13 @@ and ends, so the watch face can shade the dial.
 about a few kilometers). Sun times only depend on roughly where you are, so the app never asks for
 your precise location.
 
-**Why it uses it.** Only to calculate sunrise, sunset and twilight times. The calculation runs
+**Why it uses it.** To calculate sunrise, sunset and twilight times. The calculation runs
 entirely on your watch.
 
 **Background access.** If you allow location access "all the time", the app checks your
 location when it updates the sun times (at most once every 15 minutes, usually about once an
-hour), so the dial stays right when you travel. If you allow it only while the app is in use, it updates your location only when
-you open the app.
+hour), so the dial stays right when you travel. If you allow it only while the app is in use,
+it updates your location only when you open the app.
 
 **Where your location comes from.** Your watch provides it through Android's location services
 (Google Play services on most watches). Google handles that part under the
@@ -68,8 +70,28 @@ then shows no sun shading.
 
 ## 24h Analog widget
 
-The home screen widget shows a 24-hour clock on your phone. It doesn't access your location or any
-other personal information, and it doesn't store or send any information about you.
+The home screen widget shows a 24-hour clock on your phone, shaded with today's sunrise, sunset
+and twilight times.
+
+**What it uses.** Your approximate location (the "approximate location" permission), only to
+calculate those times. The calculation runs entirely on your phone. It doesn't access any other
+personal information.
+
+**When it checks your location.** When you open the app, it asks Android for a fresh location. If
+you allow location access "all the time", the widget also picks up the location your phone already
+has, at most once every 15 minutes; this doesn't turn on any location hardware. If you allow it
+only while the app is in use, the location updates only when you open the app.
+
+**Where your location comes from.** Android's location services on your phone. On most phones
+these are provided by Google under the [Google Privacy Policy](https://policies.google.com/privacy).
+
+**What it stores.** The most recent location (latitude and longitude) and when it last checked, in
+the app's private storage on your phone. It's excluded from Android backups, and a new location
+replaces the old one; no history is kept.
+
+**Your choices.** You can turn off location access at any time in your phone's settings; the
+widget then keeps using the last location it stored. To delete it, clear the app's storage or
+uninstall the app; the widget then shows a striped placeholder instead of the sun shading.
 
 ## Children
 

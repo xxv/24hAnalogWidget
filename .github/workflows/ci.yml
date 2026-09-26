@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Check the signing lineage
+        run: bash signing/sign-apk.sh check-lineage
+
+      - name: Build
+        run: ./gradlew assembleDebug
+
+      - name: Unit tests
+        run: ./gradlew test
+
+      - name: Lint
+        run: ./gradlew lintDebug
+
+      - name: Validate the watch face
+        run: |
+          git clone --depth 1 https://github.com/google/watchface.git "$RUNNER_TEMP/watchface"
+          cd "$RUNNER_TEMP/watchface/third_party/wff"
+          ./gradlew --quiet :specification:validator:executable-jar
+          # The format version the watch face declares in its manifest.
+          version=$(grep -A1 'com.google.wear.watchface.format.version' \
+            "$GITHUB_WORKSPACE/wear/src/main/AndroidManifest.xml" | grep -o 'value="[0-9]*"' | grep -o '[0-9]*')
+          java -jar specification/validator/build/libs/wff-validator.jar "$version" \
+            "$GITHUB_WORKSPACE/wear/src/main/res/raw/watchface.xml"
+
+      - name: Upload test and lint reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            */build/reports/**
+          retention-days: 7

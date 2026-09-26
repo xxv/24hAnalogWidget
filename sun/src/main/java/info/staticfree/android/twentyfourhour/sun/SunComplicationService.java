@@ -32,6 +32,8 @@ import androidx.wear.watchface.complications.data.RangedValueComplicationData;
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService;
 import androidx.wear.watchface.complications.datasource.ComplicationRequest;
 
+import info.staticfree.android.twentyfourhour.solar.SolarCalculator;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;

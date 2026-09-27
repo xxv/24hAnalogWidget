@@ -145,7 +145,8 @@ jobs:
 
           for apk in artifacts/*.apk; do
             if report="$("$apksigner" verify --print-certs "$apk" 2>&1)"; then
-              digest="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' <<<"$report")"
+              # The prefix varies by apksigner version ("Signer #1", "V2 Signer:", "V3.0 Signer:").
+              digest="$(sed -n 's/.*certificate SHA-256 digest: *//p' <<<"$report" | head -n 1)"
               echo "| $(basename "$apk") | \`$digest\` |" >> "$GITHUB_STEP_SUMMARY"
             else
               echo "::warning::$(basename "$apk") is not signed; set the signing secrets to get installable builds."
